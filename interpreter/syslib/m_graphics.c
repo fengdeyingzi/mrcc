@@ -174,26 +174,26 @@ union AnyValue
 
 void Lib_readBitmap(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs) 
 {
-   ReturnValue->Val->Integer = (int)readBitmap( Param[0]->Val->Pointer);
+   ReturnValue->Val->Integer = (int)readBitmap565( Param[0]->Val->Pointer);
 }
 
 void Lib_readBitmapFromAssets(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs) 
 {
-   ReturnValue->Val->Integer = (int)readBitmapFromAssets( Param[0]->Val->Pointer);
+   ReturnValue->Val->Integer = (int)readBitmap565FromAssets( Param[0]->Val->Pointer);
 }
 
 void Lib_drawBitmap(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs) 
 {
-   drawBitmap((BITMAP_565*)Param[0]->Val->Integer, Param[1]->Val->Integer,Param[2]->Val->Integer);
+   drawBitmap565((BITMAP_565*)Param[0]->Val->Integer, Param[1]->Val->Integer,Param[2]->Val->Integer);
 }
 
 void Lib_bitmapFree(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs) 
 {
-   ReturnValue->Val->Integer =bitmapFree((BITMAP_565*)Param[0]->Val->Integer);
+   ReturnValue->Val->Integer =bitmap565Free((BITMAP_565*)Param[0]->Val->Integer);
 }
 void Lib_drawBitmapFlip(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
-   ReturnValue->Val->Integer = drawBitmapFlip((BITMAP_565*)Param[0]->Val->Integer, Param[1]->Val->Integer,  Param[2]->Val->Integer, Param[3]->Val->Integer, Param[4]->Val->Integer, Param[5]->Val->Integer, Param[6]->Val->Integer);
+   ReturnValue->Val->Integer = drawBitmap565Flip((BITMAP_565*)Param[0]->Val->Integer, Param[1]->Val->Integer,  Param[2]->Val->Integer, Param[3]->Val->Integer, Param[4]->Val->Integer, Param[5]->Val->Integer, Param[6]->Val->Integer);
 }
 
 

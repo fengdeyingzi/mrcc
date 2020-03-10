@@ -1,13 +1,13 @@
 [information]
 projectname=application.mpr
 filename=mrcc.mrp
-appname=冒泡开发实验系统XL     							
+appname=手机CAPP_mrp版    							
 appid=111210
 version=1003
 visible=1
 cpu=3
 vendor=风的影子
-description=冒泡开发实验系统大内存版 mrpoid专用
+description=根据冒泡开发实验系统修改而来 增加内存 新增头文件 mrpoid专用
 include=${MRPBUILDER_HOME}..\include\, ${MRPBUILDER_HOME}..\include\plugins,sfw\,sfw\other, sfw\res\, sfw\common\, sfw\gui\, sfw\controls\, sfw\net\, src\
 output_format=mrp
 config=mtk240
@@ -45,13 +45,13 @@ file01 = game_mtk240.ext(name=game.ext)
 file02 = ${MRPBUILDER_HOME}\plugins\skyfont\skyfont_mtk.mrp
 file03 = ${MRPBUILDER_HOME}\plugins\mainext\mainext_mtk_d.mrp
 file04 = ${MRPBUILDER_HOME}\plugins\verdload\verdload_mtk.mrp
-#file05 = ${MRPBUILDER_HOME}\plugins\advbar\advbar_mtk240.mrp(plugins.lst,name=advbar.mrp,packing)
+file05 = ${MRPBUILDER_HOME}\plugins\advbar\advbar_mtk240.mrp(plugins.lst,name=advbar.mrp,packing)
 
 [files_game_mtk240]
 file05 = ${MRPBUILDER_HOME}\plugins\skyfont\skyfont_mtk.lib
-file06 = lib\mtk240.lib
+file06 = lib\capp.lib
 file07 = ${MRPBUILDER_HOME}\plugins\verdload\verdload_mtk.lib
-#file08 = ${MRPBUILDER_HOME}\plugins\advbar\advbar_mtk.lib
+file08 = ${MRPBUILDER_HOME}\plugins\advbar\advbar_mtk.lib
 file09 = ${MRPBUILDER_HOME}\security\mrpverify_mtk_dbg.lib
 file10 = lib\mtk_vm.lib
 

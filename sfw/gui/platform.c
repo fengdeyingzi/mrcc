@@ -20,6 +20,7 @@
 #include "application.h"
 #include "mainwnd.h"
 #include "mrc_android.h"
+#include "xl_debug.h"
 
 #define PICINITSUC 0x01
 #define PLATRUMMODE 0x02
@@ -34,9 +35,9 @@ int32 mrc_appResume(void);
 int32 mrc_appPause(void);
 
 //声明工程路径
-char *ProjectDir;
+char *ProjectDir = NULL;
 //运行的文件绝对路径
-char *tempfile_path;
+char *tempfile_path = NULL;
 char ASSETS_DIR[300];
 
 void SafeExit(int32 data)
@@ -98,7 +99,7 @@ int PicocCallInit(void)
 //获取工程路径
 char *xl_getFilePath(char *filename) {
     char *ptr = NULL;
-    char *path = NULL;
+    //char *path = NULL;
 	char *ProjectPath = NULL;
     //格式化
    // FormatPathString(filename, '/');
@@ -119,14 +120,22 @@ void setRunPath(char *filename){
 	//获取目录
 	ProjectDir = xl_getFilePath(filename);
 	mrc_printf("获取目录 %s",ProjectDir);
+	debug_printf("设置工程路径");
+	debug_printf(ProjectDir);
 	tempfile_path = filename;
 }
 
 //获取工程路径
-char* getProjectDir(){
+char* getProjectDir(void){
 	return ProjectDir;
 }
 
+void freeProjectDir(void){
+	if(ProjectDir!=NULL){
+		mrc_free(ProjectDir);
+		ProjectDir = NULL;
+	}
+}
 
 void PicocRun(int32 data)
 {

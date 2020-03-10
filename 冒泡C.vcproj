@@ -197,6 +197,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\sfw\gui\platform.h"
+					>
+				</File>
+				<File
 					RelativePath=".\sfw\gui\rect.c"
 					>
 				</File>
@@ -294,6 +298,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\mainwnd.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\momo.c"
 				>
 			</File>
@@ -329,6 +337,14 @@
 				RelativePath=".\src\xl_bmp.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\xl_debug.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\xl_debug.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="interpreter"
@@ -358,6 +374,10 @@
 				</File>
 				<File
 					RelativePath=".\interpreter\src\lex.c"
+					>
+				</File>
+				<File
+					RelativePath=".\interpreter\src\mpcrun.h"
 					>
 				</File>
 				<File
@@ -456,6 +476,14 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath=".\resource.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Ã°ÅÝC.rc"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

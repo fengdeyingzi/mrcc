@@ -2,6 +2,7 @@
 #include "interpreter.h"
 #include "mpcrun.h"
 #include "platform.h"
+#include "xl_debug.h"
 
 
 /* 值传递给 exit() */
@@ -90,8 +91,14 @@ char *PlatformReadFile(const char *FileName)
     char temp_path[300];
     fSize = mrc_getLen(FileName);
     fd = mrc_open(FileName, MR_FILE_RDONLY);
+	debug_printf("读取文件：");
+	debug_printf((char*)FileName);
 	if(fd==0){ //read error
+	    
 	    mrc_sprintf(temp_path, "%s/%s", getProjectDir(), FileName);
+		debug_printf("读取失败，拼接读取");
+		debug_printf(temp_path);
+		fSize = mrc_getLen(temp_path);
 		fd = mrc_open(temp_path, MR_FILE_RDONLY);
 	}
     if (fd)
@@ -134,7 +141,7 @@ void PlatformExit(int RetVal)
 {
     FuncRet = RetVal;
 	#ifdef C_RUN
-	mrc_free(getProjectDir());
+	freeProjectDir();
 	//ProjectDir = NULL;
 	#endif
     longjmp(PicocExitBuf, 1);

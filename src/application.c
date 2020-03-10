@@ -35,8 +35,8 @@ int InitApplication(VOID)
     char path[40];
 
     mrc_sprintf(path,"%stemp.c",STOREDIR);
-    tempfile_path=mrc_malloc(mrc_strlen(path)+1);
-    mrc_strcpy(tempfile_path,path);
+    /*tempfile_path=mrc_malloc(mrc_strlen(path)+1);*/
+    //mrc_strcpy(tempfile_path,path);
     mrc_mkDir(cdir);
 //     BMPScreen("logo.bmp",137,136,BM_COPY,0x0000);
 
@@ -68,8 +68,8 @@ int ExitApplication(VOID)
 {        
     if(_FUNCIS_SET_ANY(FUNC_INITSUC)) 
     {
-        if(!_FUNCIS_SET_ANY(FUNC_EXIT)) SaveCode((PSTR)tempfile_path);
-        mrc_free(tempfile_path);
+        if(!_FUNCIS_SET_ANY(FUNC_EXIT)) SaveCode((PSTR)getEditPath()); //xldebug
+        //mrc_free(tempfile_path);
         mrc_clearScreen(0,0,0);
         TextMiddle("ÕýÔÚÍË³ö",0,1);
         momo_exit();

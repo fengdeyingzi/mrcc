@@ -25,6 +25,8 @@
 //#include "smp_advbar.h"
 #include "help.h"
 #include "picoc.h"
+#include "mpcrun.h"
+#include "xl_debug.h"
 
 //查看输出的文件名
 #define newfile "c/print.txt"
@@ -98,9 +100,13 @@ static HWND hTitlebar;           //工具条句柄
 static int chain_len;        //链表节点数(页数)
 static int current;    //当前位置(从1开始)
 static CHAIN *chain_head;    //头节点
-static char path[256];          //路径
+static char path[256];          //编辑器打开的文件路径
 char advFocus;
 /////////////////////////////////////////////////////////
+
+char *getEditPath(void){
+return path;
+}
 
 static VOID ShowOptMenu(HWND hWnd)
 {    
@@ -127,7 +133,8 @@ static int32 load_program(PCSTR fname)
 	int32 handle;
 	int32 len;
     PSTR p;
-
+	debug_printf("加载文件");
+	debug_printf(fname);
 	len = mrc_getLen(fname);
     if(len < 0) return -1;
     if(len == 0)
@@ -411,7 +418,8 @@ static void MenuEvent(HWND hWnd, WORD code)
         RefText();
         break;
     case STR_RUN: //运行
-        SaveCode(tempfile_path);
+        SaveCode(path); //xldebug
+		setRunPath(path);//设置运行文件的路径 tempfile_path并没有被释放
         CreateChain(NULL);//释放编辑器内存
         _FUNCSET_STYLE(FUNC_RELOADTXT);//让编辑器能够重新打开文件
         PicocRun(0);
@@ -675,11 +683,11 @@ static void ShowEvent(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
             load_program("c/欢迎.txt");
             writeCfg(CFG_FIRSTRUN,_VERSION);
         }
-        if(mrc_fileState((PSTR)tempfile_path)==MR_IS_FILE)
+        if(tempfile_path !=NULL && mrc_fileState((PSTR)tempfile_path)==MR_IS_FILE)
         {
             _FUNCCLR_STYLE(FUNC_LOAD);
             load_program(tempfile_path);
-            mrc_remove(tempfile_path);
+            //mrc_remove(tempfile_path);
             _SET_USERDATA(hWnd,0);
         }
     }
@@ -766,7 +774,7 @@ LRESULT MAINWND_WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
         if(_FUNCIS_SET_ANY(FUNC_RELOADTXT))
         {
             _FUNCCLR_STYLE(FUNC_RELOADTXT);
-            load_program(tempfile_path);
+            load_program(path); //xldebug
             RefText();
         }
     case WM_MENUHIDE:
