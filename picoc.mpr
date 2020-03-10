@@ -1,0 +1,56 @@
+[information]
+projectname=Helloworld.mpr
+filename=picoc.mrp
+appname=冒泡开发实验系统解释器
+appid=111210
+version=1001
+visible=1
+cpu=3
+vendor=风的影子
+description=冒泡开发实验系统源码运行器,读取文件目录mpc.c
+include=${MRPBUILDER_HOME}..\include\,${MRPBUILDER_HOME}..\include\plugins\, interpreter\src\,interpreter\syslib\, src\, sfw\gui, sfw, sfw\res
+#output_format=lib
+config=mtk
+
+
+[config_mtk]
+output=mpcrun.mrp
+bmp_mode=normal
+
+[config_spr]
+output=lib\spr_vm.lib
+bmp_mode=spreadtrum
+
+
+[files]
+file11 = interpreter\src\mpcrun.c
+file02 = interpreter\src\momo_picoc.c
+file100 = interpreter\src\myfunc.c
+file101 = interpreter\src\picoc.c
+file102 = interpreter\src\platform.c
+file103 = interpreter\src\table.c
+file104 = interpreter\src\type.c
+file105 = interpreter\src\variable.c
+file106 = interpreter\src\parse.c
+file107 = interpreter\src\lex.c
+file108 = interpreter\src\include.c
+file109 = interpreter\src\heap.c
+file110 = interpreter\src\expression.c
+file111 = interpreter\src\clibrary.c
+file112 = interpreter\syslib\m_base.c
+#file113 = interpreter\syslib\m_ctype.c
+file114 = interpreter\syslib\m_sound.c
+
+file115 = interpreter\syslib\m_base_i.c
+
+
+
+#file115 = sfw\gui\window.c
+file116 = interpreter\syslib\m_android.c
+file117 = interpreter\syslib\m_graphics.c
+file118 = src\mrc_android.c
+file119 = src\mrc_graphics.c
+file120 = src\xl_bmp.c
+
+
+
