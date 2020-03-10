@@ -40,7 +40,7 @@ void IncludeInit(void)
     IncludeRegister("base.h", &mrc_base_SetupFunc, &mrc_base_Functions[0], mrc_base_Defs);
     IncludeRegister("base_i.h", &base_i_init, &base_i_Functions[0], mrc_base_i_Defs);
 	IncludeRegister("android.h", &androidSetupFunc, &androidFunctions[0], android_Defs);
-	//IncludeRegister("graphics.h", &bitmapSetupFunc, &bitmapFunctions[0], bitmap_Defs);
+	IncludeRegister("graphics.h", &bitmapSetupFunc, &bitmapFunctions[0], bitmap_Defs);
 }
 
 /* 清理包含系统头文件所使用的空间 */

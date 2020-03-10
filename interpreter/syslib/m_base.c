@@ -587,8 +587,9 @@ void Lib_drawText(struct ParseState *Parser, struct Value *ReturnValue, struct V
 
 ////////////////////////////////////////////////////////////////////
 const char mrc_base_Defs[] = "\
-#define _VERSION 1001\r\n\
+#define _VERSION 3100\r\n\
 #define _DEBUG 1\r\n\
+#define _VENDOR \"\xb7\xe7\xb5\xc4\xd3\xb0\xd7\xd3\"\r\n\
 typedef unsigned short uint16;\
 typedef unsigned long uint32;\
 typedef long int32;\
@@ -598,7 +599,7 @@ typedef short int16;\
 typedef struct{uint16 x;uint16 y;uint16 w;uint16 h;}rectst;\
 typedef struct{uint8 r;uint8 g;uint8 b;}colorst;\
 enum{KY_DOWN,KY_UP,MS_DOWN,MS_UP,MN_SLT,MN_RET,MR_DIALOG,MS_MOVE=12};\
-enum{_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,_STAR,_POUND,_UP,_DOWN,_LEFT,_RIGHT,_SLEFT=17,_SRIGHT,_SEND,_SELECT};\
+enum{_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,_STAR,_POUND,_UP,_DOWN,_LEFT,_RIGHT,_SLEFT=17,_SRIGHT,_MENU=17,_BACK,_SEND,_SELECT};\
 enum{SEEK_SET,SEEK_CUR,SEEK_END};\
 enum{IS_FILE=1,IS_DIR=2,IS_INVALID=8};\
 enum{DLG_OK,DLG_CANCEL};\

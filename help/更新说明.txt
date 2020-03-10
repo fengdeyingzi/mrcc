@@ -1,3 +1,10 @@
+版本 _VERSION=3001 
+    内存优化：改为150kb
+    实现graphics.h android.h部分函数
+    include路径改为相对路径
+    base.h新增宏定义 _MENU=17,_BACK,
+
+
 版本 _VERSION=1001 更新如下
     例程变更：
 		helloworld例程更改为自定义头文件引用例子

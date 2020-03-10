@@ -2,8 +2,8 @@
 #define _M_GRAPHICS_H_
 
 
-extern char bitmap_Defs[];
-extern struct LibraryFunction bitmapFunctions[];
+extern const char bitmap_Defs[];
+extern struct LibraryFunction bitmapFunctions[6];
 extern void bitmapSetupFunc(void);
 
 #endif

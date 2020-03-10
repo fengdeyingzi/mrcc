@@ -45,7 +45,7 @@ struct LibraryFunction androidFunctions[10];
 void androidSetupFunc(void)
 {
 	androidFunctions[0].Func = Lib_readFileFromAssets;
-	androidFunctions[0].Prototype = "void* readFileFromAssets(char*,int);";
+	androidFunctions[0].Prototype = "void* readFileFromAssets(char*,int*);";
 	
 	androidFunctions[1].Func = NULL;
 	androidFunctions[1].Prototype = NULL;
