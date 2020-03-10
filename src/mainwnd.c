@@ -134,7 +134,7 @@ static int32 load_program(PCSTR fname)
 	int32 len;
     PSTR p;
 	debug_printf("╪стьнд╪Ч");
-	debug_printf(fname);
+	debug_printf((char*)fname);
 	len = mrc_getLen(fname);
     if(len < 0) return -1;
     if(len == 0)

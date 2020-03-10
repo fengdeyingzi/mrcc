@@ -18,7 +18,7 @@ extern "C" {
 #endif  /* __cplusplus */
 
 //获取工程路径
-extern char* getProjectDir(void){
+extern char* getProjectDir(void);
 void freeProjectDir(void);
 //设置运行的C文件
 void setRunPath(char *filename);

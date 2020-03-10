@@ -176,6 +176,10 @@
 					RelativePath=".\sfw\common\string.c"
 					>
 				</File>
+				<File
+					RelativePath=".\sfw\common\string.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="gui"
@@ -476,14 +480,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath=".\resource.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Ã°ÅÝC.rc"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
