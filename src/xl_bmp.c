@@ -43,6 +43,8 @@ BITMAP_565* bmp_read(void *buf, int len){
  uint16 *buf16 = NULL;
  char *buf24 = NULL;
  int tcolor = 0;
+ int wsize;
+ int iw;
  BITMAP_565* bmp = mrc_malloc(sizeof(BITMAP_565));
  memset(bmp,0,sizeof(BITMAP_565));
  bmp->color_bit = 16;
@@ -70,7 +72,7 @@ BITMAP_565* bmp_read(void *buf, int len){
    //复制位图数据
    
    for( iy=0;iy<bmp->height;iy++){
-    mrc_memcpy(bmp->bitmap+iy*bmp->width, bufc+ptr+(bmp->height-1-iy)*bmp->width*2, w*h*2);
+    mrc_memcpy(bmp->bitmap+iy*bmp->width, bufc+ptr+(bmp->height-1-iy)*bmp->width*2, w*2);
     mrc_printf("复制位图数据%d %d\n",iy, bmp->height-1-iy);
    }
    
@@ -80,17 +82,24 @@ BITMAP_565* bmp_read(void *buf, int len){
    ptr = bmpstart;
    bmp->width = w;
    bmp->height = h;
+   //对齐字节
+   wsize = w*3;
+   if(wsize%4!=0) wsize = wsize - wsize%4 + 4;
    debug_printf("申请内存\n");
    bmp->bitmap = (uint16*)mrc_malloc(w*h*3);
    //32转16位
     buf16 = (unsigned short*)mrc_malloc(bmp->width*bmp->height*2);
     buf24 = (bufc+ptr);
-   for(i=0;i<w*h;i++){
+   for(i=0;i<h;i++){
+	   for(iw=0;iw<w;iw++){
+		   
     //BGRA
-     tcolor = (((buf24[i*3]>>3)&0x1f) 
-    | ((buf24[i*3+1]<<3)&0x7e0) 
-    | ((buf24[i*3+2]<<8)&0xf800));
-    buf16[i] = (uint16)(tcolor&0xffff);
+     tcolor = (((buf24[i*wsize+iw*3]>>3)&0x1f) 
+    | ((buf24[i*wsize+iw*3+1]<<3)&0x7e0) 
+    | ((buf24[i*wsize+iw*3+2]<<8)&0xf800));
+    buf16[i*w+iw] = (uint16)(tcolor&0xffff);
+	
+	   }
    }
    //复制位图数据
     for(iy=0;iy<bmp->height;iy++){
