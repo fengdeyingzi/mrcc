@@ -20,6 +20,8 @@
 #include "interpreter.h"
 #include "picoc.h"
 #include "mrc_android.h"
+#include "xl_debug.h"
+#include "mrc_graphics.h"
 //#include "application.h"
 //#include "mainwnd.h"
 
@@ -41,7 +43,7 @@ char *ProjectDir;
 //运行的文件绝对路径
 char *tempfile_path;
 char ASSETS_DIR[300];
-
+int32 timer_logo;
 
 
 
@@ -135,11 +137,25 @@ char* getProjectDir(void){
 	return ProjectDir;
 }
 
+void freeProjectDir(void){
+	if(ProjectDir!=NULL){
+		mrc_free(ProjectDir);
+		ProjectDir = NULL;
+	}
+}
+
 //运行mpc
 void PicocRun(int32 data)
 {
     if(!data)
     {
+		#ifdef c_RUN
+		if(timer_logo!=0){
+			mrc_timerStop(timer_logo);
+			mrc_timerDelete(timer_logo);
+			timer_logo = 0;
+		}
+		#endif
         mrc_appPause();
         _SET_BIT(suc,PLATRUMMODE);
         mrc_clearScreen(0,0,0);
@@ -172,12 +188,35 @@ void PicocRun(int32 data)
     }
 }
 
+//显示启动图
+void capp_drawLogo(int32 data){
+	BITMAP_565* bmp;
+	mrc_clearScreen(0xff,0xff,0xff);
+	debug_printf("读取图片");
+	bmp = readBitmap565FromAssets("ic_launcher.bmp");
+	if(bmp!=NULL){
+		debug_printf("显示图片");
+	drawBitmap565(bmp,(SCREEN_WIDTH-140)/2,(SCREEN_HEIGHT-140)/2);
+	debug_printf("释放图片");
+	bitmap565Free(bmp);
+	}
+	mrc_refreshScreen(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+}
+
+//定时器显示启动图
+void timer_drawLogo(){
+	timer_logo = mrc_timerCreate();
+	capp_drawLogo(1000);
+	mrc_timerStart(timer_logo, 2000, 0, PicocRun, 0);
+}
+
 int32 MRC_EXT_INIT(void)
 {
 tempfile_path = "mpc.c";
 	 momo_init();
 	 mrc_printf("mpc运行器启动");
-	 PicocRun(0);
+	 timer_drawLogo();
+	// PicocRun(0);
 	 return 0;
 }
 /*
@@ -186,7 +225,25 @@ int32 mrc_event(int32 code, int32 param0, int32 param1){
 }
 */
 
-int32 mrc_appEvent(int32 code, int32 param0, int32 param1)
+/*
+该函数需要在主ext模块中实现，当在子ext模块中调
+用mrc_extSendAppEvent函数时，主ext模块中的该函数被调
+用。
+输入:
+app,code,param0,param1    均为模块间传递的参数;
+返回值:
+返回值将被作为子模块mrc_extSendAppEvent函数的返回值
+*/
+ int32 mrc_extRecvAppEvent(int32 app, int32 code, int32 param0, int32 param1){
+	 debug_printf("mrc_extRecvAppEvent");
+	return 0;
+}
+ int32 mrc_extRecvAppEventEx(int32 code, int32 p0, int32 p1, int32 p2, int32 p3, int32 p4, int32 p5){
+	  debug_printf("mrc_extRecvAppEventEx");
+	return 0;
+}
+
+int32 mrc_event(int32 code, int32 param0, int32 param1)
 {
     if(!_IS_SET_BIT(suc,PLATRUMMODE))//非运行模式，处理编辑器
     {/*
@@ -234,7 +291,12 @@ int32 mrc_appEvent(int32 code, int32 param0, int32 param1)
 
 }
 
-int32 mrc_appPause(void)
+int32 mrc_appPause(void){\
+    debug_printf("mrc_appPause");
+	return 0;
+}
+
+int32 mrc_pause(void)
 {	
     if(!_IS_SET_BIT(suc,PLATRUMMODE))//非运行模式，处理编辑器
     {/*
@@ -263,7 +325,7 @@ int32 mrc_appPause(void)
 
 }
 
-int32 mrc_appResume(void)
+int32 mrc_resume(void)
 {
     if(!_IS_SET_BIT(suc,PLATRUMMODE))//非运行模式，处理编辑器
     {/*
@@ -290,7 +352,7 @@ int32 mrc_appResume(void)
     }
 }
 
-int32 MRC_EXT_EXIT(void)
+int32 mrc_exitApp(void)
 {
 	//调用用户应用功能
 	//int r;

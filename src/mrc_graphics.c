@@ -2,11 +2,15 @@
 #include <mrc_base.h>
 #include "mrc_android.h"
 #include "mrc_graphics.h"
+#include "xl_debug.h"
 
 BITMAP_565 *readBitmap565FromAssets(char *filename){
- int len =0;
- uint16 *buf = mrc_readFileFromAssets(filename, &len);
+ int32 len =0;
+ uint16 *buf;
+ debug_printf("开始读取文件");
+ buf = mrc_readFileFromAssets(filename, &len);
  if(len>0){
+	 debug_printf("解析图片");
   return bmp_read(buf,len);
  }
  return 0;

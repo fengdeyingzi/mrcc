@@ -5,12 +5,19 @@ int32 len,f;
 mkdir("c/例程");
 void unpack(char*in,char*out)
 {
-    buf=NULL;readfilefrommrp(NULL,in,&buf,&len,0);f=open(out,12);write(f,buf,len);close(f);free(buf);
+    buf=NULL;
+	readfilefrommrp(NULL,in,&buf,&len,0);
+	f=open(out,12);
+	write(f,buf,len);
+	close(f);
+	free(buf);
 }
 unpack("folder.bmp","c/例程/1.bmp");
 unpack("base_h","c/base.h");
 unpack("base_i_h", "c/base_i.h");
 unpack("sound_h","c/sound.h");
+unpack("android.h","c/android.h");
+unpack("graphics.h","c/graphics.h");
 unpack("t","c/模版.c");
 unpack("hellow","c/欢迎.txt");
 unpack("update","c/更新说明.txt");

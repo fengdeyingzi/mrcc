@@ -3,6 +3,7 @@
 #include "mpcrun.h"
 #include "platform.h"
 #include "xl_debug.h"
+#include "mrc_android.h"
 
 
 /* 值传递给 exit() */
@@ -82,6 +83,7 @@ void PlatformPutc(unsigned char OutCh, union OutputStreamInfo *Stream)
         mrc_write(debugfile,&OutCh,1);
 }
 
+#ifdef C_RUN
 /* 文件读入内存 */
 char *PlatformReadFile(const char *FileName)
 {
@@ -127,6 +129,50 @@ err:
     ProgramFail(NULL, "无法打开%s",FileName);
     return NULL;
 }
+
+#else //打包器
+
+/* 文件读入内存 */
+char *PlatformReadFile(const char *FileName)
+{
+    
+    int32 fSize = 0;
+    char temp_path[300];
+	char *fBuf = NULL;
+    char *buf = NULL;
+	int32 *len = &fSize;
+    buf = (char*)mrc_readFileFromAssets((char*)FileName, len);
+	
+	debug_printf("读取文件：");
+	debug_printf((char*)FileName);
+	
+	if(buf!=NULL){ //read error
+        struct ReleaseFile *NewNode=mrc_malloc(sizeof(struct ReleaseFile));
+
+        if(!NewNode) goto err0;
+        NewNode->FilePtr=NULL;
+        NewNode->next=FileList;
+        FileList=NewNode;
+
+        fBuf = (char*)mrc_malloc(fSize + 1);
+        if(!fBuf) goto err0;
+        memcpy(fBuf,buf, fSize);
+        fBuf[fSize]=0;
+        mrc_free(buf);
+        FileList->FilePtr=fBuf;
+    }
+    else goto err;
+
+    return fBuf;
+
+err0:
+    
+err:
+    ProgramFail(NULL, "无法打开%s",FileName);
+    return NULL;
+}
+
+#endif
 
 /* 读和扫描文件定义 */
 void PicocPlatformScanFile(const char *FileName)

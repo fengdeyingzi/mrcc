@@ -1,5 +1,6 @@
 
 #include <mrc_base.h>
+#include "xl_debug.h"
 #include "xl_bmp.h"
 
 //构建一个bmp 参数：内存数据，宽度，高度，透明色(0表示不透明)
@@ -31,6 +32,7 @@ static int get_short(char *buf,int ptr){
 
 //读取bmp
 BITMAP_565* bmp_read(void *buf, int len){
+	char temp[300];
  char *bufc = buf;
  int ptr=0;
  int w=0,h=0;
@@ -49,10 +51,10 @@ BITMAP_565* bmp_read(void *buf, int len){
  
  //检测文件头
  if(bufc[0]=='B' && bufc[1]=='M'){
-  mrc_printf("BM\n");
+  debug_printf("BM\n");
   ptr = 10;
   bmpstart = get_int(bufc,ptr);
-  mrc_printf("bmpstart\n");
+  debug_printf("bmpstart\n");
   ptr = 18;
   w = get_int(bufc,ptr);
   ptr = 22;
@@ -60,7 +62,7 @@ BITMAP_565* bmp_read(void *buf, int len){
   ptr = 28;
   bit = get_short(bufc,ptr);
   if(bit == 16){
-   mrc_printf("16位图\n");
+   debug_printf("16位图\n");
    ptr = bmpstart;
    bmp->width = w;
    bmp->height = h;
@@ -74,11 +76,11 @@ BITMAP_565* bmp_read(void *buf, int len){
    
   }
   else if(bit == 24){
-   mrc_printf("当前位图是24位");
+   debug_printf("当前位图是24位");
    ptr = bmpstart;
    bmp->width = w;
    bmp->height = h;
-   mrc_printf("申请内存\n");
+   debug_printf("申请内存\n");
    bmp->bitmap = (uint16*)mrc_malloc(w*h*3);
    //32转16位
     buf16 = (unsigned short*)mrc_malloc(bmp->width*bmp->height*2);
@@ -92,8 +94,11 @@ BITMAP_565* bmp_read(void *buf, int len){
    }
    //复制位图数据
     for(iy=0;iy<bmp->height;iy++){
-     mrc_printf("复制数据 %d %d\n",iy,bmp->height-1-iy);
-     mrc_memcpy (bmp->bitmap + iy*bmp->width, buf16+(bmp->height-1-iy)*bmp->width,w*h*2);
+		mrc_sprintf(temp,"%d",iy);
+		debug_printf(temp);
+     debug_printf("复制数据 %d %d\n",iy,bmp->height-1-iy);
+	 
+     mrc_memcpy (bmp->bitmap + iy*bmp->width, buf16+(bmp->height-1-iy)*bmp->width,w*2);
    }
    mrc_free(buf16);
   }
@@ -102,7 +107,7 @@ BITMAP_565* bmp_read(void *buf, int len){
  {
   return NULL;
  }
- mrc_printf("返回bmp\n");
+ debug_printf("返回bmp\n");
  return bmp;
 }
 

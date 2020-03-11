@@ -446,7 +446,7 @@ static void MenuEvent(HWND hWnd, WORD code)
             int mainUsed,mainLeft,mainUp;
 
             mainUp=mrc_getMemStatus(&mainUsed, &mainLeft, NULL, NULL, NULL, NULL);
-            mrc_sprintf(tmp,"默水瓶设计制作\n内存:\n峰值%dB\n使用%dB\n剩余%dB",mainUp,mainUsed,mainLeft);
+            mrc_sprintf(tmp,"风的影子 修改\r\n原作者：默水瓶\n内存:\n峰值%dB\n使用%dB\n剩余%dB\n手机C论坛：http://bbs.yzjlb.net",mainUp,mainUsed,mainLeft);
             CharToUnicode(tmp, &uniText.pText, &uniText.len);
             SMP_MsgBox(0,hWnd, NULL,SGL_LoadString(STR_ABOUT),(PWSTR)uniText.pText, ID_OK|SMP_MSGBOXS_AUTOCLOSE,NULL);
             mrc_freeOrigin(uniText.pText, uniText.len);

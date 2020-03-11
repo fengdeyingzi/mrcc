@@ -1,0 +1,90 @@
+//加载系统头文件base.h
+#include <base.h>
+#include <android.h>
+#include <graphics.h>
+
+/*
+头文件：graphics.h
+从安装包assets目录读取bitmap
+并绘制到屏幕上
+*/
+
+
+ void helloworld()
+{
+    //用指定颜色清除屏幕
+    cls(40,0,0);
+    //从assets目录读取bitmap
+    int32 bitmap = readBitmapFromAssets ("2.bmp.png");
+    
+    
+    //绘制bitmap
+    drawBitmap(bitmap, 0, 0);
+    
+    //释放图片缓存
+    bitmapFree(bitmap);
+    //刷新屏幕
+    ref(0,0,SCRW,SCRH);
+     int len = 0;
+    char *text = readFileFromAssets("1.txt",&len);
+    if(len>0){
+     printf("读取成功\n");
+     char *buf = malloc(len+1);
+     memcpy(buf,text,len);
+     buf[len]=0;
+     dtext(buf,30,100, 240,240,240,0,1);
+     free(buf);
+     free(text);
+    }
+    else{
+     printf("读取失败\n");
+    }
+    
+    ref(0,0,SCRW,SCRH);
+}
+
+//从assets读取文件
+
+
+
+//入口函数，程序启动时开始执行
+int init()
+{
+    //调用函数helloworld
+    helloworld();
+    
+    return 0;
+}
+
+
+
+//event函数，接收消息事件
+int event(int type, int p1, int p2)
+{
+    if(KY_UP == type)
+    {
+        switch(p1)
+        {
+        case _BACK:
+            exit();
+            break;
+        case _MENU:
+            break;
+        }
+    }
+
+    return 0;
+}
+
+//应用暂停，当程序进入后台或变为不可见时会调用此函数
+int pause()
+{
+    return 0;
+}
+
+//应用恢复，程序变为可见时调用此函数
+int resume()
+{
+    return 0;
+}
+ 

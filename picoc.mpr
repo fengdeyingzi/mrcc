@@ -1,19 +1,20 @@
 [information]
 projectname=Helloworld.mpr
 filename=picoc.mrp
-appname=冒泡开发实验系统解释器
-appid=111210
+appname=手机CAPP运行器
+appid=202003
 version=1001
 visible=1
 cpu=3
 vendor=风的影子
-description=冒泡开发实验系统源码运行器,读取文件目录mpc.c
-include=${MRPBUILDER_HOME}..\include\,${MRPBUILDER_HOME}..\include\plugins\, interpreter\src\,interpreter\syslib\, src\, sfw\gui, sfw, sfw\res
+description=手机CAPP运行器，读取mpc.c文件进行运行
+include=${MRPBUILDER_HOME}..\include\,${MRPBUILDER_HOME}..\include\plugins\, interpreter\src\,interpreter\syslib\, src\, sfw, sfw\res
 #output_format=lib
 config=mtk
 
 
 [config_mtk]
+define= VER=1.102,DATE=0325,SCREEN_SIZE_240320
 output=mpcrun.mrp
 bmp_mode=normal
 
@@ -51,6 +52,11 @@ file117 = interpreter\syslib\m_graphics.c
 file118 = src\mrc_android.c
 file119 = src\mrc_graphics.c
 file120 = src\xl_bmp.c
+file121 = src\xl_debug.c
 
-
+file123 = mpc\Android.mk(name=Android.mk)
+file124 = mpc\drawbitmap.mpc(name=mpc.c)
+file125 = mpc\assets\2.bmp.png(name=2.bmp.png)
+file126 = mpc\assets\1.txt(name=1.txt)
+file127 = mpc\ic_launcher.bmp.png(name=ic_launcher.bmp)
 

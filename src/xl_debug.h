@@ -4,6 +4,6 @@
 #define DEBUG_FILE "debug.txt"
 #define DEBUG_CHECK_FILE "风的影子"
 
-extern void debug_printf(char *text);
+extern void debug_printf(char *text,...);
 
 #endif

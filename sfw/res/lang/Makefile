@@ -13,4 +13,5 @@ config = res
 output=..\res_str.mrp
 [files] 
 file0=res_lang0.rc
+file1=res_bmp.rc
 
