@@ -7,7 +7,7 @@
 
 */
 //是否使用运行器模式 运行器true/打包器false
-//#define C_RUN 1
+#define C_RUN 1
 
 
 #define MRPOID 1
@@ -25,10 +25,10 @@
 #define STRING_LITERAL_TABLE_SIZE 150        // 字符串文字表的大小 
 #define PARAMETER_MAX 16                    // 函数参数的最大数量 
 #define LINEBUFFER_MAX 256                  // 行的最大字符数 
-#define LOCAL_TABLE_SIZE 11                 // 局部变量表的大小（可扩展） 
-#define STRUCT_TABLE_SIZE 20                // 结构/联合成员表的大小（可扩展）
+#define LOCAL_TABLE_SIZE 40                 // 局部变量表的大小（可扩展） 
+#define STRUCT_TABLE_SIZE 40               // 结构/联合成员表的大小（可扩展）
 
-#define HEAP_SIZE (150*1024)               // 堆和堆栈空间 XL风的影子修改
+#define HEAP_SIZE (256*1024)               // 堆和堆栈空间 XL风的影子修改
 
 #else
 

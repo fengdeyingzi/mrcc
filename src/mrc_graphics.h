@@ -9,4 +9,8 @@ extern void drawBitmap565(BITMAP_565 *b,int32 x,int32 y);
 extern int32 bitmap565Free(BITMAP_565 *b);
 extern BITMAP_565 *readBitmap565FromAssets(char *filename);
 
+void gl_drawRect(int32 x,int32 y,int32 w,int32 h,uint32 color);
+void gl_drawCir(int32 x,int32 y,int32 r,uint32 color);
+void drawBitmap565Ex(BITMAP_565* bmp, int32 x,int32 y,int32 w,int32 h, int32 tx, int32 ty,int32 tw,int32 th);
+
 #endif

@@ -208,16 +208,17 @@ void Lib_clipBitmap(struct ParseState *Parser, struct Value *ReturnValue, struct
 {
    ReturnValue->Val->Integer =clipBitmap(Param[0]->Val->Integer,  Param[1]->Val->Integer,Param[2]->Val->Integer,Param[3]->Val->Integer,Param[4]->Val->Integer);
 }
-
+*/
 
 
 void Lib_drawBitmapEx(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs) 
 {
-   drawBitmapEx(Param[0]->Val->Integer, 
+   drawBitmap565Ex((BITMAP_565*)Param[0]->Val->Integer, 
 	 Param[1]->Val->Integer,Param[2]->Val->Integer, Param[3]->Val->Integer,Param[4]->Val->Integer,
 	 Param[5]->Val->Integer,Param[6]->Val->Integer, Param[7]->Val->Integer,Param[8]->Val->Integer);
 }
 
+/*
 void Lib_drawBitmapExb(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
    drawBitmapExb(Param[0]->Val->Integer,
@@ -276,18 +277,18 @@ void Lib_bitmapSetPixel(struct ParseState *Parser, struct Value *ReturnValue, st
 {
    bitmapSetPixel( Param[0]->Val->Integer, Param[1]->Val->Integer, Param[2]->Val->Integer, Param[3]->Val->Integer);
 }
-
+*/
 static void Lib_drawRect(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs) 
 {
-   drawRect( Param[0]->Val->Integer, Param[1]->Val->Integer, Param[2]->Val->Integer, Param[3]->Val->Integer,Param[4]->Val->Integer);
+   gl_drawRect( Param[0]->Val->Integer, Param[1]->Val->Integer, Param[2]->Val->Integer, Param[3]->Val->Integer,Param[4]->Val->Integer);
 }
 
 static void Lib_drawCir(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs) 
 {
-   drawCir( Param[0]->Val->Integer, Param[1]->Val->Integer, Param[2]->Val->Integer, Param[3]->Val->Integer);
+   gl_drawCir( Param[0]->Val->Integer, Param[1]->Val->Integer, Param[2]->Val->Integer, Param[3]->Val->Integer);
 }
 
-
+/*
 static void Lib_clipRect(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs) 
 {
  ReturnValue->Val->Integer=  clipRect( Param[0]->Val->Integer, Param[1]->Val->Integer, Param[2]->Val->Integer, Param[3]->Val->Integer);
@@ -313,7 +314,7 @@ void *ptr; \
 
 
 
-struct LibraryFunction bitmapFunctions[6];
+struct LibraryFunction bitmapFunctions[10];
 /*
  =
 {
@@ -364,8 +365,20 @@ void bitmapSetupFunc(void)
 	bitmapFunctions[4].Func = Lib_bitmapFree;
 	bitmapFunctions[4].Prototype = "int bitmapFree(int);";
 	
-	bitmapFunctions[5].Func = NULL;
-	bitmapFunctions[5].Prototype = NULL;
+	bitmapFunctions[5].Func = Lib_drawRect;
+	bitmapFunctions[5].Prototype = "void drawRect(int,int,int,int,int);";
+	
+	bitmapFunctions[6].Func = Lib_drawCir;
+	bitmapFunctions[6].Prototype = "void drawCir(int,int,int,int);";
+	
+	bitmapFunctions[7].Func = Lib_drawBitmapEx;
+	bitmapFunctions[7].Prototype = "void drawBitmapEx(int,int,int,int,int,int,int,int,int);";
+	
+	
+	
+	
+	bitmapFunctions[8].Func = NULL;
+	bitmapFunctions[8].Prototype = NULL;
  /*
     VariableDefinePlatformVar(NULL, "M_E", &FPType, (union AnyValue *)&M_EValue, FALSE);
     VariableDefinePlatformVar(NULL, "M_LOG2E", &FPType, (union AnyValue *)&M_LOG2EValue, FALSE);

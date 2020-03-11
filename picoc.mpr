@@ -53,10 +53,11 @@ file118 = src\mrc_android.c
 file119 = src\mrc_graphics.c
 file120 = src\xl_bmp.c
 file121 = src\xl_debug.c
+file122 = src\mpc.c
 
-file123 = mpc\Android.mk(name=Android.mk)
-file124 = mpc\drawbitmap.mpc(name=mpc.c)
-file125 = mpc\assets\2.bmp.png(name=2.bmp.png)
-file126 = mpc\assets\1.txt(name=1.txt)
-file127 = mpc\ic_launcher.bmp.png(name=ic_launcher.bmp)
+file150 = mpc\Android.mk(name=Android.mk)
+file151 = mpc\drawbitmap.mpc(name=mpc.c)
+file152 = mpc\assets\2.bmp.png(name=2.bmp.png)
+file153 = mpc\assets\1.txt(name=1.txt)
+file154 = mpc\ic_launcher.bmp.png(name=ic_launcher.bmp)
 

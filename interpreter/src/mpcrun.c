@@ -22,6 +22,7 @@
 #include "mrc_android.h"
 #include "xl_debug.h"
 #include "mrc_graphics.h"
+#include "mpc.h"
 //#include "application.h"
 //#include "mainwnd.h"
 
@@ -213,6 +214,7 @@ void timer_drawLogo(){
 int32 MRC_EXT_INIT(void)
 {
 tempfile_path = "mpc.c";
+mpc_init();
 	 momo_init();
 	 mrc_printf("mpcÔËÐÐÆ÷Æô¶¯");
 	 timer_drawLogo();

@@ -8,6 +8,7 @@
 #include "smp.h"
 #include "mrc_skyfont.h"
 #include "picoc.h"
+#include "mpc.h"
 
 //char *tempfile_path;
 char cdir[3]="c/";
@@ -33,7 +34,7 @@ char cdir[3]="c/";
 int InitApplication(VOID)
 {	
     char path[40];
-
+	mpc_init();
     mrc_sprintf(path,"%stemp.c",STOREDIR);
     /*tempfile_path=mrc_malloc(mrc_strlen(path)+1);*/
     //mrc_strcpy(tempfile_path,path);
