@@ -5,4 +5,7 @@
 */
 
 //从aasts目录读取文件
-void *readFileFromAssets(char *filename, int *len);
+void *readFileFromAssets(char *filename, int32 *len);
+
+//释放assets目录读取的文件 （作废）
+void freeFileFromAssets(void *data,int32 len);

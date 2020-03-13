@@ -4,6 +4,7 @@
 #include "mrc_graphics.h"
 #include "xl_debug.h"
 #include "mpc.h"
+#include "platform.h"
 /*
 实现一些绘图函数
 主要是实现bmp图片绘制
@@ -17,24 +18,33 @@
 BITMAP_565 *readBitmap565FromAssets(char *filename){
  int32 len =0;
  uint16 *buf;
+ BITMAP_565* re = NULL;
  debug_printf("开始读取文件");
+ 
  buf = mrc_readFileFromAssets(filename, &len);
  if(len>0){
 	 debug_printf("解析图片");
-  return bmp_read(buf,len);
+  re = bmp_read(buf,len);
+  #ifdef C_RUN
+  mrc_free(buf);
+  #else
+  //mrc_freeFileData(buf,len);
+  mrc_free(buf);
+  #endif
  }
- return 0;
+ return re;
 }
 
  BITMAP_565* readBitmap565(char *filename){
 	 int32 len = mrc_getLen(filename);
+	 BITMAP_565* re = NULL;
 	 if(len>0){
 		int32 f= mrc_open(filename,1);
 		char *buf = mrc_malloc(len);
 		if(f>0){
 		 mrc_read(f, &buf, len);
 		 mrc_close(f);
-		 return bmp_read(buf,len);
+		 re = bmp_read(buf,len);
 		}
 		
 		mrc_free(buf);
@@ -42,7 +52,7 @@ BITMAP_565 *readBitmap565FromAssets(char *filename){
 	 
 	 
 	 
-	 return NULL;
+	 return re;
  }
  int32 drawBitmap565Flip(BITMAP_565 *buf, int32 x, int32 y, int32 w, int32 h, int32 sx, int32 sy){
 	  bmp_drawflip(buf, x,y,w,h, sx, sy);

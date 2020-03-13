@@ -192,12 +192,15 @@ void PicocRun(int32 data)
 //œ‘ æ∆Ù∂ØÕº
 void capp_drawLogo(int32 data){
 	BITMAP_565* bmp;
+	int32 img_w = SCREEN_WIDTH*59/100;
+	if(img_w<140)img_w = 140;
 	mrc_clearScreen(0xff,0xff,0xff);
 	debug_printf("∂¡»°Õº∆¨");
 	bmp = readBitmap565FromAssets("ic_launcher.bmp");
 	if(bmp!=NULL){
 		debug_printf("œ‘ æÕº∆¨");
-	drawBitmap565(bmp,(SCREEN_WIDTH-140)/2,(SCREEN_HEIGHT-140)/2);
+	//drawBitmap565(bmp,(SCREEN_WIDTH-140)/2,(SCREEN_HEIGHT-140)/2);
+	drawBitmap565Ex(bmp, (SCREEN_WIDTH-img_w)/2,(SCREEN_HEIGHT-img_w)/2, img_w,img_w, 0, 0,140,140);
 	debug_printf(" Õ∑≈Õº∆¨");
 	bitmap565Free(bmp);
 	}

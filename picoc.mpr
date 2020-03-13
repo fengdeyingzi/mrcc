@@ -1,9 +1,9 @@
 [information]
 projectname=Helloworld.mpr
 filename=picoc.mrp
-appname=手机CAPP运行器
+appname=手机CAPP运行器v1.2
 appid=202003
-version=1001
+version=1002
 visible=1
 cpu=3
 vendor=风的影子
@@ -57,7 +57,8 @@ file122 = src\mpc.c
 
 file150 = mpc\Android.mk(name=Android.mk)
 file151 = mpc\drawbitmap.mpc(name=mpc.c)
-file152 = mpc\assets\2.bmp.png(name=2.bmp.png)
+file152 = mpc\assets\btn_back.bmp.png(name=btn_back.bmp)
 file153 = mpc\assets\1.txt(name=1.txt)
 file154 = mpc\ic_launcher.bmp.png(name=ic_launcher.bmp)
+file155 = mpc\dimg.mpc(name=dimg.h)
 

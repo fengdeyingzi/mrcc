@@ -15,7 +15,10 @@ static void Lib_readFileFromAssets(struct ParseState *Parser, struct Value *Retu
 }
 
 
-
+static void Lib_freeFileFromAssets(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
+{
+   mrc_freeFileFromAssets(Param[0]->Val->Pointer,Param[1]->Val->Integer);
+}
 
 const char android_Defs[] = "\
   enum{LENGTH_SHORT,LENGTH_LONG};\
@@ -47,8 +50,11 @@ void androidSetupFunc(void)
 	androidFunctions[0].Func = Lib_readFileFromAssets;
 	androidFunctions[0].Prototype = "void* readFileFromAssets(char*,int*);";
 	
-	androidFunctions[1].Func = NULL;
-	androidFunctions[1].Prototype = NULL;
+	androidFunctions[1].Func = Lib_freeFileFromAssets;
+	androidFunctions[1].Prototype = "void* freeFileFromAssets(void *buf,int);";
+	
+	androidFunctions[2].Func = NULL;
+	androidFunctions[2].Prototype = NULL;
  /*
     VariableDefinePlatformVar(NULL, "M_E", &FPType, (union AnyValue *)&M_EValue, FALSE);
     VariableDefinePlatformVar(NULL, "M_LOG2E", &FPType, (union AnyValue *)&M_LOG2EValue, FALSE);

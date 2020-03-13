@@ -7,10 +7,10 @@
 
 */
 //是否使用运行器模式 运行器true/打包器false
-#define C_RUN 1
+//#define C_RUN 1
 
 
-#define MRPOID 1
+//#define MRPOID 1
  
 
 #define INTERACTIVE_PROMPT_START "starting picoc " _VERSION "\n"

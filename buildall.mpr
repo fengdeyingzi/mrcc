@@ -20,7 +20,7 @@ config=mtk240
 
 #/////////////////////////////////mtk240/////////////////////////
 [config_mtk240]
-define=SCREEN_SIZE_240320
+define=SCREEN_SIZE_240320,C_RUN
 output=lib\capp.lib
 bmp_mode=normal
 

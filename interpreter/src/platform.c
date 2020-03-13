@@ -159,6 +159,7 @@ char *PlatformReadFile(const char *FileName)
         memcpy(fBuf,buf, fSize);
         fBuf[fSize]=0;
         mrc_free(buf);
+		//mrc_freeFileData(buf,*len);
         FileList->FilePtr=fBuf;
     }
     else goto err;
