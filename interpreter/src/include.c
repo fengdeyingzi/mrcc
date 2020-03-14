@@ -2,6 +2,9 @@
 #include "interpreter.h"
 #include "m_android.h"
 #include "m_graphics.h"
+#include "m_ex_game.h"
+#include "m_ex_math.h"
+#include "m_exb.h"
 
 
 /* 我们可以包含一个库列表 */
@@ -41,6 +44,9 @@ void IncludeInit(void)
     IncludeRegister("base_i.h", &base_i_init, &base_i_Functions[0], mrc_base_i_Defs);
 	IncludeRegister("android.h", &androidSetupFunc, &androidFunctions[0], android_Defs);
 	IncludeRegister("graphics.h", &bitmapSetupFunc, &bitmapFunctions[0], bitmap_Defs);
+	IncludeRegister("ex_game.h", &Ex_GameSetupFunc, &Ex_GameFunctions[0], game_Defs);
+	IncludeRegister("ex_math.h", &Ex_MathSetupFunc, &Ex_MathFunctions[0], NULL);
+	IncludeRegister("exb.h", &exbSetupFunc, &exbFunctions[0], exb_Defs);
 }
 
 /* 清理包含系统头文件所使用的空间 */

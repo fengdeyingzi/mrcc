@@ -386,7 +386,7 @@ void Lib_GetScrSize(struct ParseState *Parser, struct Value *ReturnValue, struct
 
 void Lib_SetScrSize(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
-    mrc_setScreenSize(Param[0]->Val->Integer,Param[1]->Val->Integer);
+    //mrc_setScreenSize(Param[0]->Val->Integer,Param[1]->Val->Integer);
 }
 
 void Lib_BmpShowFlip(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
@@ -516,7 +516,7 @@ void Lib_TimerSetTime(struct ParseState *Parser, struct Value *ReturnValue, stru
 
 void Lib_DrawImg(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer= DrawIMG(Param[0]->Val->Pointer,Param[1]->Val->Integer,Param[2]->Val->Integer);
+    ReturnValue->Val->Integer= DrawIMGX(Param[0]->Val->Pointer,Param[1]->Val->Integer,Param[2]->Val->Integer);
 }
 
 void Lib_ShadeRect(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)

@@ -137,7 +137,7 @@ char *PlatformReadFile(const char *FileName)
 {
     
     int32 fSize = 0;
-    char temp_path[300];
+   // char temp_path[300];
 	char *fBuf = NULL;
     char *buf = NULL;
 	int32 *len = &fSize;

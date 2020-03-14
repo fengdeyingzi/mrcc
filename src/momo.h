@@ -270,6 +270,7 @@ int32 StrNum(char *str);
 //根据文件名画图片,图片格式可以为BMP24,JPG,GIF等平台支持的格式
 //成功返回MR_SUCCESS,失败返回MR_FAILED，未实现返回MR_IGNORE.
 int DrawIMG(char* filename, int x,int y);
+int DrawIMGX(char* filename, int x,int y);
 
 
 #endif

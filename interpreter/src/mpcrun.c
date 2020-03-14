@@ -109,7 +109,7 @@ int PicocCallInit(void)
 //获取工程路径
 char *xl_getFilePath(char *filename) {
     char *ptr = NULL;
-    char *path = NULL;
+   // char *path = NULL;
 	char *ProjectPath = NULL;
     //格式化
    // FormatPathString(filename, '/');

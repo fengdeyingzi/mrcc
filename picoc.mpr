@@ -54,6 +54,11 @@ file119 = src\mrc_graphics.c
 file120 = src\xl_bmp.c
 file121 = src\xl_debug.c
 file122 = src\mpc.c
+file123 = interpreter\syslib\m_ex_game.c
+file124 = interpreter\syslib\m_ex_math.c
+file125 = interpreter\syslib\m_exb.c
+file126 = interpreter\syslib\math.c
+file127 = src\xl_coding.c
 
 file150 = mpc\Android.mk(name=Android.mk)
 file151 = mpc\drawbitmap.mpc(name=mpc.c)

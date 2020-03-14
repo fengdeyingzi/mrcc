@@ -1,0 +1,19 @@
+#include <base.h>
+#include <graphics.h>
+
+
+void dimg(char *filename, int x,int y){
+  if(strncmp(filename,"assets://",9)==0){
+  //从assets目录读取bitmap
+    int32 bitmap = readBitmapFromAssets (filename+9);
+    
+    
+    //绘制bitmap
+    drawBitmap(bitmap, x, y);
+    
+    //释放图片缓存
+    bitmapFree(bitmap);
+    
+  }
+   
+}

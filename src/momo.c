@@ -3,6 +3,8 @@
 #include "i18n.h"
 #include "mrc_network.h"
 #include "platform.h"
+#include "mrc_graphics.h"
+#include "xl_debug.h"
 
 #define DIRLEN  18
 char STOREDIR[DIRLEN];
@@ -378,6 +380,65 @@ int DrawIMG(char* filename, int x,int y)
 	input.src_len = mrc_strlen(filename);
 
     return mrc_platEx(3010, (uint8*)&input, sizeof(T_DRAW_DIRECT_REQ), NULL, NULL, NULL);
+}
+
+//新的drawImg
+int DrawIMGX(char *filename, int x,int y){
+	int32 f;
+	int32 len;
+	uint8 *buf;
+	char *endName;
+	int img_type = MRC_IMG_JPG;
+	int32 w,h;
+	//int32 endName_index = 0;
+	uint16 *bmpbuf = NULL;
+	BITMAP_565 *bitmap = NULL;
+	if(filename == NULL)return -1;
+	endName = mrc_strrchr(filename, '.');
+	if(endName == NULL)return -1;
+	debug_log("drawImg endname=%s", endName);
+	if(mrc_strcmp(endName,".jpg")==0 || mrc_strcmp(endName,".JPG")==0 ){
+		img_type = MRC_IMG_JPG;
+	}
+else if(mrc_strcmp(endName,".gif")==0 || mrc_strcmp(endName, ".GIF")==0){
+	img_type = MRC_IMG_GIF;
+}
+else if(mrc_strcmp(endName,".bmp")==0 || mrc_strcmp(endName, ".BMP")==0){
+	img_type = 2;
+	debug_log("读取bmp");
+	bitmap = readBitmap565(filename);
+	debug_printf("开始绘制");
+	if(bitmap!=NULL){
+		debug_log("绘制");
+	drawBitmap565(bitmap, x,y);
+	bitmap565Free(bitmap);
+	}
+	
+	return 0;
+}
+else {
+	return -1;
+}
+	
+	len = mrc_getLen(filename);
+	debug_log("img len = %d",len);
+	buf = malloc(len);
+	f=mrc_open(filename, 1);
+	if(f>0){
+		debug_log("读取图片");
+		mrc_read(f, &buf, len);
+		mrc_close(f);
+		debug_log("解析图片");
+		mrc_Img2bmp(buf,len, img_type, &bmpbuf, &w, &h);
+		if(bmpbuf!=NULL){
+			
+		//绘制图片
+		mrc_bitmapShowFlip(bmpbuf, x, y, w,w,h, BM_COPY, 0,0,0);
+		debug_log("释放图片");
+		mrc_free(bmpbuf);
+		}
+	}
+	return 0;
 }
 
 int32 GetMRPFileInfo(int32 MRPhandle, char *filename, int32 *filepos, int32 *filelen, int32 *iszip)

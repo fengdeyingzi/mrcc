@@ -32,8 +32,7 @@ static int get_short(char *buf,int ptr){
 
 //读取bmp
 BITMAP_565* bmp_read(void *buf, int len){
-	char temp[300];
- char *bufc = buf;
+ char *bufc = (char*)buf;
  int ptr=0;
  int w=0,h=0;
  int bit=16; //bmp位数
@@ -49,11 +48,11 @@ BITMAP_565* bmp_read(void *buf, int len){
  memset(bmp,0,sizeof(BITMAP_565));
  bmp->color_bit = 16;
  bmp->mode = BM_COPY;
- 
- 
+ debug_log("检测文件头");
+ debug_log("检测文件头 %c %c",*(bufc+1),*(bufc+2));
  //检测文件头
  if(bufc[0]=='B' && bufc[1]=='M'){
-  debug_printf("BM\n");
+  debug_log("BM\n");
   ptr = 10;
   bmpstart = get_int(bufc,ptr);
   debug_printf("bmpstart\n");
@@ -103,9 +102,8 @@ BITMAP_565* bmp_read(void *buf, int len){
    }
    //复制位图数据
     for(iy=0;iy<bmp->height;iy++){
-		mrc_sprintf(temp,"%d",iy);
-		debug_printf(temp);
-     debug_printf("复制数据 %d %d\n",iy,bmp->height-1-iy);
+		
+     //debug_printf("复制数据 %d %d\n",iy,bmp->height-1-iy);
 	 
      mrc_memcpy (bmp->bitmap + iy*bmp->width, buf16+(bmp->height-1-iy)*bmp->width,w*2);
    }
@@ -114,6 +112,7 @@ BITMAP_565* bmp_read(void *buf, int len){
  }
  else
  {
+	 debug_printf("不是bmp图片");
   return NULL;
  }
  debug_printf("返回bmp\n");

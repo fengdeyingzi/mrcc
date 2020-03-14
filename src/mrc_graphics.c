@@ -36,17 +36,29 @@ BITMAP_565 *readBitmap565FromAssets(char *filename){
 }
 
  BITMAP_565* readBitmap565(char *filename){
-	 int32 len = mrc_getLen(filename);
+	 int32 f;
+	 void *buf;
+	 int32 len = 0;
 	 BITMAP_565* re = NULL;
+	 debug_printf("获取文件长度");
+	 len = mrc_getLen(filename);
+	 
 	 if(len>0){
-		int32 f= mrc_open(filename,1);
-		char *buf = mrc_malloc(len);
+		 debug_printf("open");
+		 f= mrc_open(filename,1);
+		 debug_log("malloc %d", len);
+		buf = mrc_malloc(len);
+		if(buf==NULL){
+			debug_log("申请内存失败");
+		}
 		if(f>0){
-		 mrc_read(f, &buf, len);
+			debug_printf("read");
+		 mrc_read(f, buf, len);
 		 mrc_close(f);
+		 debug_printf("bmp_read");
 		 re = bmp_read(buf,len);
 		}
-		
+		debug_printf("释放内存");
 		mrc_free(buf);
 	 }
 	 
@@ -99,12 +111,12 @@ static int gl_getLineSize(int x,int y, int x2,int y2){
 //混合两个颜色
 int32 gl_getColor(int32 color1, uint32 color2){
  //printf("getColor %x %x\n",color1,color2);
-  int a1 = (color1>>24)&0xff;
+  //int a1 = (color1>>24)&0xff;
   int r1 = (color1>>16)&0xff;
   int g1 = (color1>>8)&0xff;
   int b1 = color1&0xff;
   //printf("a1=%d r1=%d g1=%d b1=%d\n",a1,r1,g1,b1);
-  int a2 = (color2>>24)&0xff;
+  //int a2 = (color2>>24)&0xff;
   int r2 = (color2>>16)&0xff;
   int g2 = (color2>>8)&0xff;
   int b2 = color2&0xff;
@@ -170,5 +182,12 @@ void gl_drawCir(int32 x,int32 y,int32 r,uint32 color){
  //printf("color>>24 = %d\n",color>>24);
 }
 
-
+int32 bitmap565getInfo(BITMAP_565* bmp, BITMAPINFO *info){
+	mrc_memset(info,0, sizeof(BITMAPINFO));
+	info->width = bmp->width;
+	info->height = bmp->height;
+	info->format = 16;
+	info->ptr = bmp->bitmap;
+	return 0;
+}
 

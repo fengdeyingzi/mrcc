@@ -44,6 +44,8 @@ extern "C" {
 #include "mrc_exb.h"
 #include "mrc_sound.h"
 #include "mrc_bmp.h"
+#include "mrc_android.h"
+#include "mrc_graphics.h"
 
 
 
@@ -331,13 +333,17 @@ void mpc_init(void);
 
 //void DrawShadeRect(int16 x, int16 y, int16 w, int16 h, uint32 pixelA, uint32 pixelB, int8 mode);
 
+#define readFileFromAssets mrc_readFileFromAssets
 
-
-
-
-
-
-
+#define readBitmap(filename) ((int32)readBitmap565(filename))
+#define drawBitmapFlip(buf,  x,  y,  w,  h,  sx,  sy) drawBitmap565Flip((BITMAP_565 *)buf, x,y,w,h,sx,sy)
+#define drawBitmap(buf,x,y) drawBitmap565((BITMAP_565 *)buf, x, y)
+#define bitmapFree(buf) bitmap565Free((BITMAP_565 *)buf)
+#define readBitmapFromAssets(filename) ((int32)readBitmap565FromAssets(filename))
+#define drawRect gl_drawRect
+#define drawCir gl_drawCir
+#define drawBitmapEx( bmp,  x, y, w, h,  tx,  ty, tw, th) drawBitmap565Ex((BITMAP_565*)bmp,x,y,w,h,tx,ty,tw,th)
+#define bitmapGetInfo(bitmap, info) bitmap565getInfo((BITMAP_565*)bitmap, info)
 
 #ifdef __cplusplus
 }

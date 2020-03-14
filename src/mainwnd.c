@@ -348,23 +348,38 @@ static int NodePat(void)//分页是将当前页分成两页，把当前页的前半部分内容放到后插
 }
 
 /////////////////////////////////////////////////////////////////////
+//xldebug 修复保存代码造成文件清空问题
 int32 SaveCode(PSTR name)
 {
     int32 f = 0;
-
+	int32 code_len = 0;
+	char temp[300];
+	PSTR code;
+	CHAIN *tmp=chain_head;
+	//计算代码长度
+	while(tmp){
+        code = UnicodeToChar((PCWSTR)tmp->txt);  
+		code_len += mrc_strlen(code);
+        tmp = tmp->next;
+    }
+	if(code_len<=0)return -1;
     if(!name) return -1;
-    mrc_remove(name);
+	mrc_sprintf(temp, "%s.bak", name);
+	//不删除文件，而是直接重命名
+    mrc_remove(temp);
+	mrc_rename(name, temp);
     f = mrc_open(name,4|8);
     if(!f)
         return -1;
     else
     {
-        PSTR code;
-        CHAIN *tmp=chain_head;
+        
+        tmp=chain_head;
 
         while(tmp)
         {
-            code = UnicodeToChar((PCWSTR)tmp->txt);         
+            code = UnicodeToChar((PCWSTR)tmp->txt);  
+			code_len = mrc_strlen(code);
             if(code)
             {
                 mrc_write(f,code,mrc_strlen(code));

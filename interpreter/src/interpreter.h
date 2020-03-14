@@ -269,10 +269,13 @@ struct LexState
     int EmitExtraNewlines;
 };
 
+typedef void (*PFunction)(struct ParseState *Parser, struct Value *, struct Value **, int);
+
 /* ¿âº¯Êý¶¨Òå */
 struct LibraryFunction
 {
-    void (*Func)(struct ParseState *Parser, struct Value *, struct Value **, int);
+	PFunction Func;
+ //   void (*Func)(struct ParseState *Parser, struct Value *, struct Value **, int);
     char *Prototype;
 };
 
