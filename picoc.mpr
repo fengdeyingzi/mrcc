@@ -1,9 +1,9 @@
 [information]
 projectname=Helloworld.mpr
 filename=picoc.mrp
-appname=手机CAPP运行器v1.2
+appname=手机CAPP运行器v1.3
 appid=202003
-version=1002
+version=3003
 visible=1
 cpu=3
 vendor=风的影子

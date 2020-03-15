@@ -361,6 +361,7 @@ int32 SaveCode(PSTR name)
         code = UnicodeToChar((PCWSTR)tmp->txt);  
 		code_len += mrc_strlen(code);
         tmp = tmp->next;
+		SGL_FREE(code);
     }
 	if(code_len<=0)return -1;
     if(!name) return -1;

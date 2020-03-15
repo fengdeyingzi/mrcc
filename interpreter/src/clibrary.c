@@ -38,6 +38,9 @@ void LibraryInit(void)
     VariableDefinePlatformVar(NULL, "FALSE", &IntType, (union AnyValue *)&ZeroValue, FALSE);
     VariableDefinePlatformVar(NULL, "SCRW", &UnsignedShortType, (union AnyValue *)&SCREEN_WIDTH, FALSE);
     VariableDefinePlatformVar(NULL, "SCRH", &UnsignedShortType, (union AnyValue *)&SCREEN_HEIGHT, FALSE);
+	#ifdef C_RUN
+	VariableDefinePlatformVar(NULL, "_DEBUG", &IntType, (union AnyValue *)&TRUEValue, FALSE);
+	#endif
 }
 
 /* Ìí¼Ó¿â */

@@ -588,7 +588,8 @@ void Lib_drawText(struct ParseState *Parser, struct Value *ReturnValue, struct V
 ////////////////////////////////////////////////////////////////////
 const char mrc_base_Defs[] = "\
 #define _VERSION 3100\r\n\
-#define _DEBUG 1\r\n\
+#define _PLATFORM \"mrp\"\r\n\
+#define _RUN_MODE \"picoc\"\r\n\
 #define _VENDOR \"\xb7\xe7\xb5\xc4\xd3\xb0\xd7\xd3\"\r\n\
 typedef unsigned short uint16;\
 typedef unsigned long uint32;\
@@ -607,15 +608,16 @@ enum{BM_OR, BM_XOR, BM_COPY, BM_NOT,BM_MERGENOT,BM_ANDNOT,BM_TRANS,BM_AND,BM_GRA
 typedef void (*CFuncType)(struct ParseState *Parser, struct Value *, struct Value **, int);
  
 struct LibraryFunction mrc_base_Functions[100];
+static uint32 base_index = 0;
 static void AddString(CFuncType func,  char *proto_type)
 {
-    static uint32 index = 0;
+    
 
-    if (index < 100/*MAX_STRING_FUNC_COUNT*/)
+    if (base_index < 100/*MAX_STRING_FUNC_COUNT*/)
     {
-        mrc_base_Functions[index].Func = func;
-        mrc_base_Functions[index].Prototype = proto_type;
-        index++;
+        mrc_base_Functions[base_index].Func = func;
+        mrc_base_Functions[base_index].Prototype = proto_type;
+        base_index++;
     }
 }
 
@@ -623,24 +625,25 @@ static void AddString(CFuncType func,  char *proto_type)
 
 void mrc_base_SetupFunc(void)
 {
+	base_index = 0;
     mrc_base_Functions[0].Func = Lib_Malloc;
     mrc_base_Functions[0].Prototype = "void* malloc(int);";
-    AddString(Lib_Malloc, "void* malloc(int);");
+   // AddString(Lib_Malloc, "void* malloc(int);");
     mrc_base_Functions[1].Func = Lib_Free;
     mrc_base_Functions[1].Prototype = "void free(void*);";
-AddString(Lib_Free, "void free(void*);");
+//AddString(Lib_Free, "void free(void*);");
     mrc_base_Functions[2].Func = Lib_U2c;
     mrc_base_Functions[2].Prototype = "int u2c(char*,int,char**,int*);";
-AddString(Lib_U2c , "int u2c(char*,int,char**,int*);");
+//AddString(Lib_U2c , "int u2c(char*,int,char**,int*);");
     mrc_base_Functions[3].Func = Lib_Memcpy;
     mrc_base_Functions[3].Prototype = "void* memcpy(void*,void*,uint32);";
-AddString(Lib_Memcpy, "void* memcpy(void*,void*,uint32);");
+//AddString(Lib_Memcpy, "void* memcpy(void*,void*,uint32);");
     mrc_base_Functions[4].Func = Lib_Memmove;
     mrc_base_Functions[4].Prototype = "void* memmove(void *,void*,uint32);";
-AddString(Lib_Memmove, "void* memmove(void*,void*,uint32);");
+//AddString(Lib_Memmove, "void* memmove(void*,void*,uint32);");
     mrc_base_Functions[5].Func = Lib_Strcpy;
     mrc_base_Functions[5].Prototype = "char* strcpy(char*,char*);";
-AddString(Lib_Strcpy, "char*,char*);");
+//AddString(Lib_Strcpy, "char*,char*);");
     mrc_base_Functions[6].Func = Lib_Strncpy;
     mrc_base_Functions[6].Prototype = "char* strncpy(char*,char*,int);";
 

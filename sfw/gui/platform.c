@@ -115,8 +115,16 @@ char *xl_getFilePath(char *filename) {
     return ProjectPath;
 }
 
+void freeProjectDir(void){
+	if(ProjectDir!=NULL){
+		mrc_free(ProjectDir);
+		ProjectDir = NULL;
+	}
+}
+
 //设置工程路径 设置运行的c文件
 void setRunPath(char *filename){
+	freeProjectDir();
 	//获取目录
 	ProjectDir = xl_getFilePath(filename);
 	mrc_printf("获取目录 %s",ProjectDir);
@@ -130,12 +138,7 @@ char* getProjectDir(void){
 	return ProjectDir;
 }
 
-void freeProjectDir(void){
-	if(ProjectDir!=NULL){
-		mrc_free(ProjectDir);
-		ProjectDir = NULL;
-	}
-}
+
 
 void PicocRun(int32 data)
 {

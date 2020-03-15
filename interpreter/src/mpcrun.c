@@ -40,7 +40,7 @@ int32 mrc_appResume(void);
 int32 mrc_appPause(void);
 
 //声明工程路径
-char *ProjectDir;
+char *ProjectDir = NULL;
 //运行的文件绝对路径
 char *tempfile_path;
 char ASSETS_DIR[300];
@@ -106,7 +106,7 @@ int PicocCallInit(void)
     return 0;
 }
 
-//获取工程路径
+//获取工程路径 ProjectPath申请了内存
 char *xl_getFilePath(char *filename) {
     char *ptr = NULL;
    // char *path = NULL;
@@ -125,9 +125,17 @@ char *xl_getFilePath(char *filename) {
     return ProjectPath;
 }
 
+void freeProjectDir(void){
+	if(ProjectDir!=NULL){
+		mrc_free(ProjectDir);
+		ProjectDir = NULL;
+	}
+}
+
 //设置工程路径 设置运行的c文件
 void setRunPath(char *filename){
 	//获取目录
+	freeProjectDir();
 	ProjectDir = xl_getFilePath(filename);
 	mrc_printf("获取目录 %s",ProjectDir);
 	tempfile_path = filename;
@@ -138,12 +146,7 @@ char* getProjectDir(void){
 	return ProjectDir;
 }
 
-void freeProjectDir(void){
-	if(ProjectDir!=NULL){
-		mrc_free(ProjectDir);
-		ProjectDir = NULL;
-	}
-}
+
 
 //运行mpc
 void PicocRun(int32 data)
