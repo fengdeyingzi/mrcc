@@ -53,7 +53,7 @@ file06 = lib\capp.lib
 file07 = ${MRPBUILDER_HOME}\plugins\verdload\verdload_mtk.lib
 file08 = ${MRPBUILDER_HOME}\plugins\advbar\advbar_mtk.lib
 file09 = ${MRPBUILDER_HOME}\security\mrpverify_mtk_dbg.lib
-file10 = lib\mtk_vm.lib
+#file10 = lib\mtk_vm.lib
 
 
 
