@@ -5,6 +5,7 @@
 #include "m_ex_game.h"
 #include "m_ex_math.h"
 #include "m_exb.h"
+#include "m_net.h"
 
 
 /* 我们可以包含一个库列表 */
@@ -47,6 +48,7 @@ void IncludeInit(void)
 	IncludeRegister("ex_game.h", &Ex_GameSetupFunc, &Ex_GameFunctions[0], game_Defs);
 	IncludeRegister("ex_math.h", &Ex_MathSetupFunc, &Ex_MathFunctions[0], NULL);
 	IncludeRegister("exb.h", &exbSetupFunc, &exbFunctions[0], exb_Defs);
+	IncludeRegister("net.h", &netSetupFunc, &netFunctions[0], net_Defs);
 }
 
 /* 清理包含系统头文件所使用的空间 */

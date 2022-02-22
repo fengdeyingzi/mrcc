@@ -31,8 +31,8 @@ int32 _p0;
 int32 _p1;
 char suc;
 
-int32 mrc_appResume(void);
-int32 mrc_appPause(void);
+int32 mrc_resume(void);
+int32 mrc_pause(void);
 
 //声明工程路径
 char *ProjectDir = NULL;
@@ -56,7 +56,7 @@ void SafeExit(int32 data)
     {
         mrc_timerDelete(data);
         PicocCleanup();
-        mrc_appResume();
+        mrc_resume();
     }
 }
 
@@ -144,7 +144,7 @@ void PicocRun(int32 data)
 {
     if(!data)
     {
-        mrc_appPause();
+        mrc_pause();
         _SET_BIT(suc,PLATRUMMODE);
         mrc_clearScreen(0,0,0);
         mrc_drawText("启动运行",0,0,240,0,0,0,1);
@@ -176,12 +176,12 @@ void PicocRun(int32 data)
     }
 }
 
-int32 MRC_EXT_INIT(void)
+int32 mrc_init(void)
 {
 	return momo_init();
 }
 
-int32 mrc_appEvent(int32 code, int32 param0, int32 param1)
+int32 mrc_event(int32 code, int32 param0, int32 param1)
 {
     if(!_IS_SET_BIT(suc,PLATRUMMODE))//非运行模式，处理编辑器
     {
@@ -229,7 +229,7 @@ int32 mrc_appEvent(int32 code, int32 param0, int32 param1)
 
 }
 
-int32 mrc_appPause(void)
+int32 mrc_pause(void)
 {	
     if(!_IS_SET_BIT(suc,PLATRUMMODE))//非运行模式，处理编辑器
     {
@@ -257,7 +257,7 @@ int32 mrc_appPause(void)
 
 }
 
-int32 mrc_appResume(void)
+int32 mrc_resume(void)
 {
     if(!_IS_SET_BIT(suc,PLATRUMMODE))//非运行模式，处理编辑器
     {
@@ -304,6 +304,15 @@ int32 MRC_EXT_EXIT(void)
 #endif
 
 	return r;
+}
+
+ int32 mrc_extRecvAppEvent(int32 app, int32 code, int32 param0, int32 param1){
+	 debug_printf("mrc_extRecvAppEvent");
+	return 0;
+}
+ int32 mrc_extRecvAppEventEx(int32 code, int32 p0, int32 p1, int32 p2, int32 p3, int32 p4, int32 p5){
+	  debug_printf("mrc_extRecvAppEventEx");
+	return 0;
 }
 
 

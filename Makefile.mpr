@@ -42,17 +42,17 @@ plugin=app
 
 [files_mtk240]
 file01 = game_mtk240.ext(name=game.ext)
-file02 = ${MRPBUILDER_HOME}\plugins\skyfont\skyfont_mtk.mrp
-file03 = ${MRPBUILDER_HOME}\plugins\mainext\mainext_mtk_d.mrp
-file04 = ${MRPBUILDER_HOME}\plugins\verdload\verdload_mtk.mrp
-file05 = ${MRPBUILDER_HOME}\plugins\advbar\advbar_mtk240.mrp(plugins.lst,name=advbar.mrp,packing)
+#file02 = ${MRPBUILDER_HOME}\plugins\skyfont\skyfont_mtk.mrp
+#file03 = ${MRPBUILDER_HOME}\plugins\mainext\mainext_mtk_d.mrp
+#file04 = ${MRPBUILDER_HOME}\plugins\verdload\verdload_mtk.mrp
+#file05 = ${MRPBUILDER_HOME}\plugins\advbar\advbar_mtk240.mrp(plugins.lst,name=advbar.mrp,packing)
 
 [files_game_mtk240]
-file05 = ${MRPBUILDER_HOME}\plugins\skyfont\skyfont_mtk.lib
+#file05 = ${MRPBUILDER_HOME}\plugins\skyfont\skyfont_mtk.lib
 file06 = lib\capp.lib
-file07 = ${MRPBUILDER_HOME}\plugins\verdload\verdload_mtk.lib
-file08 = ${MRPBUILDER_HOME}\plugins\advbar\advbar_mtk.lib
-file09 = ${MRPBUILDER_HOME}\security\mrpverify_mtk_dbg.lib
+#file07 = ${MRPBUILDER_HOME}\plugins\verdload\verdload_mtk.lib
+#file08 = ${MRPBUILDER_HOME}\plugins\advbar\advbar_mtk.lib
+#file09 = ${MRPBUILDER_HOME}\security\mrpverify_mtk_dbg.lib
 #file10 = lib\mtk_vm.lib
 
 

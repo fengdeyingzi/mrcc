@@ -16,6 +16,7 @@ unpack("folder.bmp","c/Àı³Ì/1.bmp");
 unpack("base_h","c/base.h");
 unpack("base_i_h", "c/base_i.h");
 unpack("sound_h","c/sound.h");
+unpack("net_h","c/net.h");
 unpack("android.h","c/android.h");
 unpack("graphics.h","c/graphics.h");
 unpack("t","c/Ä£°æ.c");
