@@ -1,0 +1,42 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "MRP_OPNAMES",
+                "DSM_FULL",
+                "TARGET_MOD",
+                "MTK_MOD",
+                "MR_VERSION=1968",
+                "MR_PLAT_DRAWTEXT"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c99",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:\\SKYsdk\\include\\**"
+            ],
+            "defines": [
+                "MRP_OPNAMES",
+                "DSM_FULL",
+                "TARGET_MOD",
+                "MTK_MOD",
+                "MR_VERSION=1968",
+                "MR_PLAT_DRAWTEXT"
+            ],
+            "compilerPath": "C:/msys64/mingw32/bin/gcc.exe",
+            "cStandard": "c99",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}

@@ -271,6 +271,7 @@ int32 StrNum(char *str);
 //成功返回MR_SUCCESS,失败返回MR_FAILED，未实现返回MR_IGNORE.
 int DrawIMG(char* filename, int x,int y);
 int DrawIMGX(char* filename, int x,int y);
-
+//判断后缀
+int32 checkEndName(char* path, char* endName);
 
 #endif

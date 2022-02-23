@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "locale": "c",
+        "thread": "c",
+        "xlocale": "c",
+        "xlocmes": "c",
+        "xlocmon": "c",
+        "xlocnum": "c",
+        "xloctime": "c",
+        "mrp.h": "c",
+        "array": "c",
+        "vector": "c",
+        "xstring": "c",
+        "xutility": "c"
+    }
+}

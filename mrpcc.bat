@@ -59,10 +59,11 @@ java -jar D:\app\mrpbuilder.jar -t build ^
  interpreter\syslib\m_exb.c ^
  interpreter\syslib\m_net.c ^
  interpreter\syslib\math.c ^
- src\xl_coding.c ^
+ src\xl_coding.c src\mrp.c src\FileRW.c ^
  sfw\res\res_lang0.rc ^
  sfw\res\bmp\folder.bmp ^
  sfw\res\bmp\file.bmp ^
+ sfw\res\head ^
  help\base.h(name=base_h) ^
  help\sound.h(name=sound_h) ^
  help\net.h(name=net_h) ^
@@ -87,7 +88,8 @@ java -jar D:\app\mrpbuilder.jar -t build ^
  help\demo\时间日期.txt(name=22) ^
  help\demo\数组与排序.txt(name=23) ^
  help\demo\贪吃蛇.txt(name=24) ^
+ run.mrp(name=run.mrp) ^
 -o capp.mrp -gzip -bmp565 ^
--filename mrcc.mrp -displayname "手机CAPP_1.5 mrp版" -vendor "风的影子" -desc "根据冒泡开发实验系统修改而来 增加内存 新增头文件 mrpoid专用" -appid 111210 -version 3005
+-filename mrcc.mrp -displayname "手机CAPP_1.6 mrp版" -vendor "风的影子" -desc "根据冒泡开发实验系统修改而来 增加内存 新增头文件 mrpoid专用" -appid 111210 -version 3006
 @REM mrpbuilder -t info -i capp.mrp
 @REM start capp.mrp

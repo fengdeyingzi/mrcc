@@ -59,7 +59,7 @@ void SafeExit(int32 data)
         mrc_drawText("结束运行",0,0,240,0,0,0,1);
         mrc_refreshScreen(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
         data=mrc_timerCreate();
-        mrc_timerStart(data,1000,data,SafeExit,0);
+        mrc_timerStart(data,500,data,SafeExit,0);
         return;
     }
     else
@@ -163,8 +163,8 @@ void PicocRun(int32 data)
         mrc_appPause();
         _SET_BIT(suc,PLATRUMMODE);
         mrc_clearScreen(0,0,0);
-        mrc_drawText("启动运行",0,0,240,0,0,0,1);
-        mrc_refreshScreen(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+        mrc_drawText("启动运行",0,0,0,240,0,0,1);
+        // mrc_refreshScreen(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
         data=mrc_timerCreate();
         mrc_timerStart(data,500,data,PicocRun,0);
     }

@@ -929,3 +929,16 @@ int32 Check(char *key)
 	return ret;
 }
 */
+
+
+//ÅÐ¶Ïºó×º
+int32 checkEndName(char* path, char* endName){
+    char *tempname = mrc_strrchr(path, '.');
+    if(tempname == NULL){
+        return 0;
+    }
+    if(mrc_strcmp(endName, tempname)==0){
+        return 1;
+    }
+    return 0;
+}

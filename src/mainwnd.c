@@ -27,6 +27,7 @@
 #include "picoc.h"
 #include "mpcrun.h"
 #include "xl_debug.h"
+#include "FileRW.h"
 
 //查看输出的文件名
 #define newfile "c/print.txt"
@@ -564,8 +565,20 @@ static void MenuEvent(HWND hWnd, WORD code)
 saveto:
             SMP_InputBox(MAINWND_FNAME_INPUT, hWnd, SGL_LoadString(STR_INPUTNAME), SGL_LoadString(STR_TMPNAME), 128, ES_ALPHA, NULL);
         break;
-    case STR_BUILDER:
-        SMP_MsgBox(0,hWnd, NULL,SGL_LoadString(STR_MSG),SGL_LoadString(STR_BUILDERERROR), ID_OK,NULL);
+    case STR_BUILDER: // 打包mrp
+        if(!path[0]){ //请先打开文件
+            SMP_MsgBox(0,hWnd, NULL, SGL_LoadString(STR_MSG),(PCWSTR)"\x8b\xf7\x51\x48\x62\x53\x5f\x0\x65\x87\x4e\xf6\x0\x0",ID_OK, NULL );
+        }
+        else if(checkEndName(path, ".c")){
+            mrc_drawText("开始打包",0,0,240, 0, 0,0,1);
+            mrc_refreshScreen(0,0,SCREEN_WIDTH,24);
+            packProject(path);
+            SMP_MsgBox(0,hWnd, NULL, SGL_LoadString(STR_MSG),(PCWSTR)"\x62\x53\x53\x5\x5b\x8c\x62\x10\xff\xc\x0\x6d\x0\x72\x0\x70\x57\x28\x5d\xe5\x7a\xb\x76\xee\x5f\x55\x4e\xb\x0\x0",ID_OK, NULL );
+        }else{ //你打开的不是C文件
+            SMP_MsgBox(0,hWnd, NULL, SGL_LoadString(STR_MSG),(PCWSTR)"\x4f\x60\x62\x53\x5f\x0\x76\x84\x4e\xd\x66\x2f\x0\x43\x65\x87\x4e\xf6\x0\x0",ID_OK, NULL );
+        }
+        // if(path)
+        // SMP_MsgBox(0,hWnd, NULL,SGL_LoadString(STR_MSG),SGL_LoadString(STR_BUILDERERROR), ID_OK,NULL);
         break;
     }
 }
