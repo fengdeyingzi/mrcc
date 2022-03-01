@@ -5,6 +5,7 @@
 #include "xl_debug.h"
 #include "mpc.h"
 #include "platform.h"
+#include "tpng.h"
 /*
 实现一些绘图函数
 主要是实现bmp图片绘制
@@ -14,17 +15,100 @@
 */
 //将rgb888转rgb565
 #define MAKECOLOR565(color) ((uint16)((color>>8)&0xf800) |  (uint16)((color>>5)&0x07e0) | (uint16)((color>>3)&0x1f))
+#ifndef MAKERGB
+#define MAKERGB(r, g, b) ( ((uint16)(r>>3) << 11) | ((uint16)(g>>2) << 5) | ((uint16)(b>>3)) )
+#endif
+
+
+BITMAP_565* decode_png(void * pngdata, uint32 pngSize) {
+
+    // Then, declare a place to hold the width / height.
+    //
+    uint32 width;
+    uint32 height;
+    int32 ix=0,iy=0;
+    char temp[300];
+BITMAP_565* bmp=NULL;
+uint8 *rgbaData = NULL;
+uint8 *data = NULL;
+
+    // Next, we use tPNG to extract the raw color values as 8bit R G B A
+    // data. The width and height are also extracted.
+    //
+    
+     rgbaData = tpng_get_rgba(
+       (uint8*) pngdata,
+        pngSize,
+        &width,
+        &height
+    );
+    data = rgbaData;
+    mrc_sprintf(temp,"width = %d, height = %d\n",width,height);
+    // There could have been an error! In such a case, the pixel data will 
+    // be NULL and the width/height 0. Note that in most cases tPNG will 
+    // try to read as much of the file as possible. Any parts that cannot be read 
+    // default to "fully transparent black" (#00000000)
+    //
+    if (rgbaData == NULL) {
+        return 0;
+    }
+
+    // Now we can use it! Nothing fancy. It's just in RGBA, 32bit format.
+    // The whole image is a single buffer, laid out in rows from left to right,
+    // top to bottom.
+    //
+     bmp = mrc_malloc(sizeof(BITMAP_565));
+ mrc_memset(bmp,0,sizeof(BITMAP_565));
+ bmp->width = width;
+ bmp->height = height;
+ bmp->color_bit = 16;
+ bmp->transcolor = 0;
+ bmp->mode = BM_TRANSPARENT;
+ bmp->bitmap = mrc_malloc(width*height*2);
+ mrc_memset(bmp->bitmap, 0, width*height*2);
+ for(iy = 0; iy < height; ++iy) {
+        for(ix = 0; ix < width; ++ix) {
+            if(data[3]){
+              bmp->bitmap[width*iy+ix] = MAKERGB(data[0],data[1],data[2]);
+            }
+            
+            // mrc_printf("Pixel @ X and Y (%d, %d): %3d %3d %3d %3d\n",
+            //     ix+1, iy+1,
+            //     data[0],
+            //     data[1],
+            //     data[2],
+            //     data[3]
+            // );
+            data+=4;
+        }
+    }
+    // print_png(rgbaData, width, height);
+    
+    // ref(0, 0, SCRW, SCRH);
+    
+    // Don't forget to free the heap-allocated buffer after you're done!
+    //
+    mrc_free(rgbaData);
+    return bmp;
+}
 
 BITMAP_565 *readBitmap565FromAssets(char *filename){
  int32 len =0;
  uint16 *buf;
  BITMAP_565* re = NULL;
+ char *endName=NULL;
  debug_printf("开始读取文件");
  
  buf = mrc_readFileFromAssets(filename, &len);
  if(len>0){
 	 debug_printf("解析图片");
-  re = bmp_read(buf,len);
+  endName = mrc_strrchr(filename, '.');
+	if(endName !=NULL && mrc_strcmp(endName,".png")==0 ){
+    re = decode_png(buf, (uint32)len);
+  }else{
+    re = bmp_read(buf,len);
+  }
+  
   #ifdef C_RUN
   mrc_free(buf);
   #else
@@ -39,31 +123,33 @@ BITMAP_565 *readBitmap565FromAssets(char *filename){
 	 int32 f;
 	 void *buf;
 	 int32 len = 0;
-	 BITMAP_565* re = NULL;
+	 BITMAP_565 *re = NULL;
+	 char *endName = NULL;
 	 debug_printf("获取文件长度");
 	 len = mrc_getLen(filename);
-	 
-	 if(len>0){
+
+	 if (len > 0) {
 		 debug_printf("open");
-		 f= mrc_open(filename,1);
+		 f = mrc_open(filename, 1);
 		 debug_log("malloc %d", len);
-		buf = mrc_malloc(len);
-		if(buf==NULL){
-			debug_log("申请内存失败");
-		}
-		if(f>0){
-			debug_printf("read");
-		 mrc_read(f, buf, len);
-		 mrc_close(f);
-		 debug_printf("bmp_read");
-		 re = bmp_read(buf,len);
-		}
-		debug_printf("释放内存");
-		mrc_free(buf);
+		 buf = mrc_malloc(len);
+		 if (buf == NULL) {
+			 debug_log("申请内存失败");
+		 }
+		 if (f > 0) {
+			 debug_printf("read");
+			 mrc_read(f, buf, len);
+			 mrc_close(f);
+			 debug_printf("bmp_read");
+			 endName = mrc_strrchr(filename, '.');
+			 if (endName != NULL && mrc_strcmp(endName, ".png") == 0) {
+				 re = decode_png(buf, (uint32)len);
+			 } else
+				 re = bmp_read(buf, len);
+		 }
+		 debug_printf("释放内存");
+		 mrc_free(buf);
 	 }
-	 
-	 
-	 
 	 return re;
  }
  int32 drawBitmap565Flip(BITMAP_565 *buf, int32 x, int32 y, int32 w, int32 h, int32 sx, int32 sy){

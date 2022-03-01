@@ -1,6 +1,11 @@
 /bin
 /lib
 /Debug
+*.mrp
+*.fmt
+*.ext
+*.o
+*.obj
 
 
 

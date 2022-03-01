@@ -840,11 +840,13 @@ LRESULT MAINWND_WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	{
 		PCWSTR pContent = (PCWSTR)wParam;
         CHAIN *tmp;
-
+        mrc_printf("--> WM_setEditText ");
         tmp = FindNode(current);
 
         wstrncpy((PWSTR)tmp->txt, pContent,512);
+        mrc_printf("--> copy Text");
         RefText();
+        mrc_printf("--> RefText OK");
         return 0;
 	}
 

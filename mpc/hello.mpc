@@ -1,6 +1,7 @@
 //加载系统头文件base.h
 #include <base.h>
 #include <graphics.h>
+#include <android.h>
 
 /*
 头文件：graphics.h
@@ -43,6 +44,13 @@ int event(int type, int p1, int p2) {
 			break;
 		case _MENU:
 			exit();
+			break;
+		case 1:
+		int32 len = 0;
+		    int32 bitmap = readBitmapFromAssets("1.png");
+			drawBitmap(bitmap, 0,0);
+			bitmapFree(bitmap);
+			ref(0,0,SCRW,SCRH);
 			break;
 		}
 	} else if (MS_UP == type) {

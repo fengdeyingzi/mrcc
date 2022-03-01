@@ -159,8 +159,8 @@ int32 removeDir(const char* dirName)
 
     if(!dirName)
         return MR_FAILED;    
-    memset(fullName, 0, sizeof(fullName));
-    memset(fileName, 0, sizeof(fileName));
+    mrc_memset(fullName, 0, sizeof(fullName));
+    mrc_memset(fileName, 0, sizeof(fileName));
 
     dirNameLen = strlen(dirName);
     memcpy(fullName, dirName, dirNameLen);
@@ -194,7 +194,7 @@ int32 removeDir(const char* dirName)
                     else if(length == MR_IS_DIR)//文件夹类型，递归删除子文件夹
                         removeDir(fullName);
                 }
-                memset(fileName, 0, sizeof(fileName));
+                mrc_memset(fileName, 0, sizeof(fileName));
                 result = mrc_findGetNext(fd, fileName, sizeof(fileName));
             }
             mrc_findStop(fd);
@@ -526,7 +526,7 @@ int32 MakePath(char *path)
     if(i>127) return -1;
     dir=(char*)mrc_malloc(256);
     dir2=&dir[128];
-    memset(dir,0,256);
+    mrc_memset(dir,0,256);
     do
     {
         for(t=i=0; *path; i++,path++)

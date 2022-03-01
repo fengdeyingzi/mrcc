@@ -148,11 +148,11 @@ static char *getDirName(char *path) {
 			break;
 		}
 	}
-	for (i = end-1; i >= 0; i--) {
+	for (i = end - 1; i >= 0; i--) {
 		if (path[i] == '/' || path[i] == '\\') {
 			start = i + 1;
 			mrc_memcpy(dirname, path + start, end - start);
-			*(dirname+(end-start)) = '\0';
+			*(dirname + (end - start)) = '\0';
 			break;
 		}
 	}
@@ -186,7 +186,7 @@ char *FindPos(char *StrS, char *StrF, int32 SLen, int32 FLen) {
 int32 mrpReplaceFile(const char *MrpFile, char *filename, char *conname) {
 	int32 fHwnd;
 	int32 MrpSize, NameLen, NewOffset;
-	int32 MRPHeaderSize = 0; //[12:16] 文件头的长度，通常是240，如果有额外数据则需要加上额外数据的长度
+	int32 MRPHeaderSize = 0;  //[12:16] 文件头的长度，通常是240，如果有额外数据则需要加上额外数据的长度
 	uint32 FileHeadLen, NewRcSize;
 	char *HeadData, *RcData, *RcName, *pPos;
 
@@ -216,12 +216,12 @@ int32 mrpReplaceFile(const char *MrpFile, char *filename, char *conname) {
 	FileHeadLen += 8;
 
 	//取得信息和列表数据
-	HeadData = (char *)mrc_malloc(FileHeadLen-MRPHeaderSize);
+	HeadData = (char *)mrc_malloc(FileHeadLen - MRPHeaderSize);
 	mrc_seek(fHwnd, MRPHeaderSize, MR_SEEK_SET);
-	mrc_read(fHwnd, HeadData, FileHeadLen-MRPHeaderSize);
+	mrc_read(fHwnd, HeadData, FileHeadLen - MRPHeaderSize);
 
 	//查找res_lang0.rc
-	pPos = FindPos(HeadData, RcName, FileHeadLen, NameLen+1);
+	pPos = FindPos(HeadData, RcName, FileHeadLen, NameLen + 1);
 	if (pPos) {
 		//修改新res_lang0.rc偏移
 		NewOffset = MrpSize + NameLen + 8;
@@ -236,7 +236,7 @@ int32 mrpReplaceFile(const char *MrpFile, char *filename, char *conname) {
 
 		//写回Mrp文件
 		mrc_seek(fHwnd, MRPHeaderSize, MR_SEEK_SET);
-		mrc_write(fHwnd, HeadData, FileHeadLen-MRPHeaderSize);
+		mrc_write(fHwnd, HeadData, FileHeadLen - MRPHeaderSize);
 
 		//写入res_lang0.rc信息到末尾
 		mrc_seek(fHwnd, 0, MR_SEEK_END);
@@ -250,7 +250,7 @@ int32 mrpReplaceFile(const char *MrpFile, char *filename, char *conname) {
 		mrc_seek(fHwnd, 0, MR_SEEK_END);
 		mrc_write(fHwnd, RcData, NewRcSize);
 		mrc_printf("替换文件成功");
-	}else{
+	} else {
 		mrc_printf("替换文件失败");
 	}
 
@@ -332,27 +332,21 @@ int32 mrpSetDisplayName(const char *MrpFile, const char *displayname) {
 	}
 	return MR_SUCCESS;
 }
-void tomrppro(uint8 value, uint8 error){
-
+void tomrppro(uint8 value, uint8 error) {
 }
-void ShowLineText(int8 line, char *text, uint8 r, uint8 g, uint8 b)
-{
+void ShowLineText(int8 line, char *text, uint8 r, uint8 g, uint8 b) {
 	static int8 sum;
-	if(!line)
-	{
-		mrc_clearScreen(0,0,0);
-		sum=0;
+	if (!line) {
+		mrc_clearScreen(0, 0, 0);
+		sum = 0;
 	}
-	if(sum >= (SCREEN_HEIGHT / 24 - 1))
-	{
-		mrc_clearScreen(0,0,0);
-		sum=0;
-	}
-	else
-	{
+	if (sum >= (SCREEN_HEIGHT / 24 - 1)) {
+		mrc_clearScreen(0, 0, 0);
+		sum = 0;
+	} else {
 		sum++;
 	}
-	mrc_drawText(text, 0, 24 * (sum-1), r, g, b, 0,1);
+	mrc_drawText(text, 0, 24 * (sum - 1), r, g, b, 0, 1);
 	mrc_refreshScreen(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
@@ -366,15 +360,15 @@ int32 mrpAddFile(const char *MrpFile, char *filename) {
 	int32 ret = 0;
 	TOMRPINFO mrpinfo;
 	// mrc_sprintf(MrpFile_new, "%s%s", MrpFile,".mrp");
-	mrc_printf("mrpAddFile: %s %s %s", MrpFile, filename,"MrpFile_new");
-	
+	mrc_printf("mrpAddFile: %s %s %s", MrpFile, filename, "MrpFile_new");
+
 	//清除缓存目录内数据
 	removeDir(cacheDir);
 	mrc_mkDir(cacheDir);
 	//解包
 	mrc_printf("开始解包");
-	UnMrp((char*)MrpFile, cacheDir, 50*1024, FALSE);
-	
+	UnMrp((char *)MrpFile, cacheDir, 50 * 1024, FALSE);
+
 	//打包
 	// PackageMrp(mrpinfo, MrpFile, cacheDir, MrpFile_new);
 	displayname = "我的Mrp";
@@ -386,23 +380,22 @@ int32 mrpAddFile(const char *MrpFile, char *filename) {
 	mrpinfo.filename = "capprun.mrp";
 	mrpinfo.vendor = "风的影子";
 	mrc_printf("开始打包");
-	
+
 	mrc_sprintf(temp, "%s/%s", cacheDir, getName(filename));
 	CopyFile(temp, filename);
 	ret = ToMrp(cacheDir, MrpFile, 20480, &mrpinfo, tomrppro);
-	switch(ret)
-	{
+	switch (ret) {
 	case MRP_SUCCESS:
-		ShowLineText(1,"打包操作成功！",255,255,255);
+		ShowLineText(1, "打包操作成功！", 255, 255, 255);
 		return;
 	case MRP_SEARCHFAILED:
-		ShowLineText(1,"无法搜索文件！",255,255,255);
+		ShowLineText(1, "无法搜索文件！", 255, 255, 255);
 		break;
 	case MRP_OPENFAILED:
-		ShowLineText(1,"无法打开文件！",255,255,255);
+		ShowLineText(1, "无法打开文件！", 255, 255, 255);
 		break;
 	case MRP_LISTLENFAILED:
-		ShowLineText(1,"没有找到文件！",255,255,255);
+		ShowLineText(1, "没有找到文件！", 255, 255, 255);
 		break;
 	default:
 		break;
@@ -417,16 +410,15 @@ int32 mrpAddFile(const char *MrpFile, char *filename) {
 	return MR_SUCCESS;
 }
 
-int32 unpackFile(char* name,char*out)
-{
-    char *buf=NULL;
+int32 unpackFile(char *name, char *out) {
+	char *buf = NULL;
 	int32 f = 0;
 	int32 len = 0;
-	mrc_printf("unpackFile %s -> %s",name,out);
-	buf = mrc_readFileFromMrp(name,&len,0);
-	f=mrc_open(out,12);
-	if(f!=0){
-		mrc_write(f,buf,len);
+	mrc_printf("unpackFile %s -> %s", name, out);
+	buf = mrc_readFileFromMrp(name, &len, 0);
+	f = mrc_open(out, 12);
+	if (f != 0) {
+		mrc_write(f, buf, len);
 		mrc_close(f);
 		mrc_freeFileData(buf, len);
 		return MR_SUCCESS;
@@ -443,14 +435,14 @@ int32 packProject(char *path) {
 	char *temp = mrc_malloc(255);
 	char *temppath = mrc_malloc(255);
 	int list_n = 0;
-	
+
 	char *proDir = getParamPath(path);
 	char *assetsDir = mrc_malloc(128);
 	char *displayname = getDirName(path);
 	char *mrpPath = mrc_malloc(255);
 	char *tempfile = mrc_malloc(255);
 	char *cacheDir = "mrpbuilder";
-	
+
 	TOMRPINFO mrpinfo;
 	mrc_sprintf(assetsDir, "%s/assets", proDir);
 	mrpinfo.appid = 1000;	 //APPID
@@ -466,12 +458,12 @@ int32 packProject(char *path) {
 	//清除缓存目录内数据
 	removeDir(cacheDir);
 	mrc_mkDir(cacheDir);
-	UnMrp((char*)mrpPath, cacheDir, 50*1024, FALSE);
+	UnMrp((char *)mrpPath, cacheDir, 50 * 1024, FALSE);
 	mrc_sprintf(tempfile, "%s/%s", cacheDir, "mpc.c");
 	CopyFile(tempfile, path);
 	// mrpReplaceFile(mrpPath, path, "mpc.c");
-	
-    //搜索path目录
+
+	//搜索path目录
 	f = mrc_findStart(proDir, temp, 72);
 	if (f == MR_FAILED) {
 		return MR_FAILED;
@@ -480,11 +472,11 @@ int32 packProject(char *path) {
 	if (temp[0] != '\0' && *temp != '.') {
 		list_n++;
 		if (checkEndName(temp, ".c") || checkEndName(temp, ".C") || checkEndName(temp, ".h") || checkEndName(temp, ".H")) {
-			mrc_sprintf(temppath,"%s/%s",proDir, temp);
+			mrc_sprintf(temppath, "%s/%s", proDir, temp);
 			mrc_sprintf(tempfile, "%s/%s", cacheDir, temp);
-	        CopyFile(tempfile, temppath);
-		    // mrpAddFile(mrpPath, temppath);
-		    // list_add(view, temp);
+			CopyFile(tempfile, temppath);
+			// mrpAddFile(mrpPath, temppath);
+			// list_add(view, temp);
 		}
 	}
 
@@ -498,9 +490,9 @@ int32 packProject(char *path) {
 		if (*temp != '.') {
 			if (checkEndName(temp, ".c") || checkEndName(temp, ".C") || checkEndName(temp, ".h") || checkEndName(temp, ".H")) {
 				list_n++;
-				mrc_sprintf(temppath,"%s/%s",proDir, temp);
+				mrc_sprintf(temppath, "%s/%s", proDir, temp);
 				mrc_sprintf(tempfile, "%s/%s", cacheDir, temp);
-	            CopyFile(tempfile, temppath);
+				CopyFile(tempfile, temppath);
 				// mrpAddFile(mrpPath, temppath);
 			}
 		}
@@ -509,64 +501,60 @@ int32 packProject(char *path) {
 	//搜索assets目录
 	ret = 0;
 	f = mrc_findStart(assetsDir, temp, 72);
-	if (f == MR_FAILED) {
-		return MR_FAILED;
-	}
-	mrc_printf("findstart %s", temp);
-	if (temp[0] != '\0' && *temp != '.') {
-		list_n++;
-		
-			mrc_sprintf(temppath,"%s/%s",assetsDir, temp);
+	if (f != MR_FAILED) {
+		mrc_printf("findstart %s", temp);
+		if (temp[0] != '\0' && *temp != '.') {
+			list_n++;
+
+			mrc_sprintf(temppath, "%s/%s", assetsDir, temp);
 			mrc_sprintf(tempfile, "%s/%s", cacheDir, temp);
 			mrc_printf("CopyFile %s %s", tempfile, temppath);
-	        CopyFile(tempfile, temppath);
-		    // mrpAddFile(mrpPath, temppath);
-		    // list_add(view, temp);
-		
-	}
-	
-	while (ret == 0) {
-		ret = mrc_findGetNext(f, temp, 72);
-		mrc_printf("findnext %s", temp);
-		if (ret == MR_FAILED)
-			break;
-		if (temp[0] == '\0')
-			break;
-		if (*temp != '.') {
-			
+			CopyFile(tempfile, temppath);
+			// mrpAddFile(mrpPath, temppath);
+			// list_add(view, temp);
+		}
+
+		while (ret == 0) {
+			ret = mrc_findGetNext(f, temp, 72);
+			mrc_printf("findnext %s", temp);
+			if (ret == MR_FAILED)
+				break;
+			if (temp[0] == '\0')
+				break;
+			if (*temp != '.') {
 				list_n++;
-				mrc_sprintf(temppath,"%s/%s",assetsDir, temp);
+				mrc_sprintf(temppath, "%s/%s", assetsDir, temp);
 				mrc_sprintf(tempfile, "%s/%s", cacheDir, temp);
 				mrc_printf("CopyFile %s %s", tempfile, temppath);
-	            CopyFile(tempfile, temppath);
+				CopyFile(tempfile, temppath);
 				// mrpAddFile(mrpPath, temppath);
-			
+			}
 		}
 	}
+
 	ret = ToMrp(cacheDir, mrpPath, 20480, &mrpinfo, tomrppro);
-	switch(ret)
-	{
+	switch (ret) {
 	case MRP_SUCCESS:
-		ShowLineText(1,"打包操作成功！",255,255,255);
+		ShowLineText(1, "打包操作成功！", 255, 255, 255);
 		return;
 	case MRP_SEARCHFAILED:
-		ShowLineText(1,"无法搜索文件！",255,255,255);
+		ShowLineText(1, "无法搜索文件！", 255, 255, 255);
 		break;
 	case MRP_OPENFAILED:
-		ShowLineText(1,"无法打开文件！",255,255,255);
+		ShowLineText(1, "无法打开文件！", 255, 255, 255);
 		break;
 	case MRP_LISTLENFAILED:
-		ShowLineText(1,"没有找到文件！",255,255,255);
+		ShowLineText(1, "没有找到文件！", 255, 255, 255);
 		break;
 	default:
 		break;
 	}
 	mrpSetDisplayName(mrpPath, displayname);
 	mrc_findStop(f);
-	mrc_free(temp); //
-	mrc_free(proDir); //
-	mrc_free(temppath); //
-	mrc_free(mrpPath); //
-	mrc_free(tempfile); //
+	mrc_free(temp);		 //
+	mrc_free(proDir);	 //
+	mrc_free(temppath);	 //
+	mrc_free(mrpPath);	 //
+	mrc_free(tempfile);	 //
 	mrc_free(assetsDir);
 }

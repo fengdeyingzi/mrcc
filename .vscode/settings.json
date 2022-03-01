@@ -11,6 +11,7 @@
         "array": "c",
         "vector": "c",
         "xstring": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "smp_toolbar.h": "c"
     }
 }

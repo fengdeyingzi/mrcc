@@ -2,7 +2,7 @@
 @REM 开始编译
 java -jar D:\app\mrpbuilder.jar -t build ^
 -Iinterpreter\src\ -Iinterpreter\syslib\ -Isrc\ -Isfw -Isfw\res ^
--Isfw\adv\ -Isfw\common\ -Isfw\gui\ -Isfw\controls\ -Isfw\net\ ^
+-Isfw\adv\ -Isfw\common\ -Isfw\gui\ -Isfw\controls\ -Isfw\net\ -Isrc\tPNG\ ^
 -DSCREEN_SIZE_240320 -DC_RUN ^
 -i ^
  sfw\common\string.c ^
@@ -59,7 +59,7 @@ java -jar D:\app\mrpbuilder.jar -t build ^
  interpreter\syslib\m_exb.c ^
  interpreter\syslib\m_net.c ^
  interpreter\syslib\math.c ^
- src\xl_coding.c src\mrp.c src\FileRW.c ^
+ src\xl_coding.c src\mrp.c src\FileRW.c src\tPNG\tpng.c ^
  sfw\res\res_lang0.rc ^
  sfw\res\bmp\folder.bmp ^
  sfw\res\bmp\file.bmp ^
@@ -90,6 +90,6 @@ java -jar D:\app\mrpbuilder.jar -t build ^
  help\demo\贪吃蛇.txt(name=24) ^
  run.mrp(name=run.mrp) ^
 -o capp.mrp -gzip -bmp565 ^
--filename mrcc.mrp -displayname "手机CAPP_1.6 mrp版" -vendor "风的影子" -desc "根据冒泡开发实验系统修改而来 增加内存 新增头文件 mrpoid专用" -appid 111210 -version 3006
+-filename mrcc.mrp -displayname "手机CAPP_1.7 mrp版" -vendor "风的影子" -desc "根据冒泡开发实验系统修改而来 增加内存 新增头文件 mrpoid专用" -appid 111210 -version 3007
 @REM mrpbuilder -t info -i capp.mrp
 @REM start capp.mrp
