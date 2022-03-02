@@ -124,7 +124,7 @@ char *getParamPath(char *path) {
 }
 
 // 获取文件名
-static char *getName(char *path) {
+ char *file_getName(char *path) {
 	int i = 0;
 	for (i = mrc_strlen(path) - 1; i >= 0; i--) {
 		if (path[i] == '/' || path[i] == '\\') {
@@ -135,7 +135,7 @@ static char *getName(char *path) {
 }
 
 //需要free
-static char *getDirName(char *path) {
+ char *file_getDirName(char *path) {
 	int i = 0;
 	int end = mrc_strlen(path);
 	char *dirname = mrc_malloc(128);
@@ -381,13 +381,13 @@ int32 mrpAddFile(const char *MrpFile, char *filename) {
 	mrpinfo.vendor = "风的影子";
 	mrc_printf("开始打包");
 
-	mrc_sprintf(temp, "%s/%s", cacheDir, getName(filename));
+	mrc_sprintf(temp, "%s/%s", cacheDir, file_getName(filename));
 	CopyFile(temp, filename);
 	ret = ToMrp(cacheDir, MrpFile, 20480, &mrpinfo, tomrppro);
 	switch (ret) {
 	case MRP_SUCCESS:
 		ShowLineText(1, "打包操作成功！", 255, 255, 255);
-		return;
+		break;
 	case MRP_SEARCHFAILED:
 		ShowLineText(1, "无法搜索文件！", 255, 255, 255);
 		break;
@@ -429,7 +429,7 @@ int32 unpackFile(char *name, char *out) {
 //打包工程
 int32 packProject(char *path) {
 	int32 f;
-	char *endfile;
+	// char *endfile;
 	// int32 i;
 	int32 ret = 0;
 	char *temp = mrc_malloc(255);
@@ -438,12 +438,13 @@ int32 packProject(char *path) {
 
 	char *proDir = getParamPath(path);
 	char *assetsDir = mrc_malloc(128);
-	char *displayname = getDirName(path);
+	char *displayname = file_getDirName(path);
 	char *mrpPath = mrc_malloc(255);
 	char *tempfile = mrc_malloc(255);
 	char *cacheDir = "mrpbuilder";
 
-	TOMRPINFO mrpinfo;
+	TOMRPINFO mrpinfo; 
+	mrc_strcat(displayname, " - capp");
 	mrc_sprintf(assetsDir, "%s/assets", proDir);
 	mrpinfo.appid = 1000;	 //APPID
 	mrpinfo.version = 1001;	 //版本ID
@@ -536,7 +537,7 @@ int32 packProject(char *path) {
 	switch (ret) {
 	case MRP_SUCCESS:
 		ShowLineText(1, "打包操作成功！", 255, 255, 255);
-		return;
+		break;
 	case MRP_SEARCHFAILED:
 		ShowLineText(1, "无法搜索文件！", 255, 255, 255);
 		break;
@@ -557,4 +558,5 @@ int32 packProject(char *path) {
 	mrc_free(mrpPath);	 //
 	mrc_free(tempfile);	 //
 	mrc_free(assetsDir);
+	return MR_SUCCESS;
 }

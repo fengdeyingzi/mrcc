@@ -7,11 +7,32 @@
 //#include "../../mpc_malloc.h"
 
 
-
+static void an_Toast(char *text, int32 type) {
+   int32 w,h;
+   int32 ix,iy,iw,ih;
+   int32 rx,ry,rw,rh;
+   mrc_textWidthHeight(text, 0, 1, &w,&h);
+   ix = (SCREEN_WIDTH - w)/2;
+   iy = (SCREEN_HEIGHT - h) - SCREEN_HEIGHT/10;
+   iw = w;
+   ih = h;
+   rx = ix-2;
+   ry = iy-2;
+   rw = iw+4;
+   rh = ih+4;
+   mrc_drawRect(rx,ry,rw,rh, 0,0,0);
+   mrc_drawText(text,ix,iy, 240,240,240,0,1);
+   mrc_refreshScreen(rx,ry, rw,rh);
+}
 
 static void Lib_readFileFromAssets(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
    ReturnValue->Val->Pointer =mrc_readFileFromAssets(Param[0]->Val->Pointer,Param[1]->Val->Pointer);
+}
+
+static void Lib_Toast(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
+{
+    an_Toast(Param[0]->Val->Pointer,  Param[1]->Val->Integer);
 }
 
 
@@ -53,8 +74,11 @@ void androidSetupFunc(void)
 	androidFunctions[1].Func = Lib_freeFileFromAssets;
 	androidFunctions[1].Prototype = "void* freeFileFromAssets(void *buf,int);";
 	
-	androidFunctions[2].Func = NULL;
-	androidFunctions[2].Prototype = NULL;
+   androidFunctions[2].Func = Lib_Toast;
+	androidFunctions[2].Prototype = "void toast(char*,int);";
+
+	androidFunctions[3].Func = NULL;
+	androidFunctions[3].Prototype = NULL;
  /*
     VariableDefinePlatformVar(NULL, "M_E", &FPType, (union AnyValue *)&M_EValue, FALSE);
     VariableDefinePlatformVar(NULL, "M_LOG2E", &FPType, (union AnyValue *)&M_LOG2EValue, FALSE);

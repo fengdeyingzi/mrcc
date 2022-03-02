@@ -9,4 +9,6 @@ int32 mrpSetDisplayName(const char *MrpFile,const char *displayname);
 int32 mrpAddFile(const char *MrpFile, char *filename);
 char *getParamPath(char *path);
 int32 packProject(char *path);
+ char *file_getDirName(char *path); 
+  char *file_getName(char *path) ;
 #endif

@@ -765,7 +765,7 @@ void mrc_base_SetupFunc(void)
     mrc_base_Functions[45].Prototype = "short* c2u(char*,int*,int*);";
 
     mrc_base_Functions[46].Func = Lib_TextWidthHeight;
-    mrc_base_Functions[46].Prototype = "int textwh(char*,int,int,int*,int*);";
+    mrc_base_Functions[46].Prototype = "int textwh(char*,int,int,int32*,int32*);";
 
     mrc_base_Functions[47].Func = Lib_DrawPoint;
     mrc_base_Functions[47].Prototype = "void dpoint(int,int,int);";

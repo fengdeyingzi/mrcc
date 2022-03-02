@@ -31,6 +31,7 @@ BITMAP_565* decode_png(void * pngdata, uint32 pngSize) {
 BITMAP_565* bmp=NULL;
 uint8 *rgbaData = NULL;
 uint8 *data = NULL;
+int32 is_tran = FALSE;
 
     // Next, we use tPNG to extract the raw color values as 8bit R G B A
     // data. The width and height are also extracted.
@@ -63,16 +64,18 @@ uint8 *data = NULL;
  bmp->height = height;
  bmp->color_bit = 16;
  bmp->transcolor = 0;
- bmp->mode = BM_TRANSPARENT;
+ bmp->mode = BM_COPY;
  bmp->bitmap = mrc_malloc(width*height*2);
  mrc_memset(bmp->bitmap, 0, width*height*2);
  for(iy = 0; iy < height; ++iy) {
         for(ix = 0; ix < width; ++ix) {
             if(data[3]){
               bmp->bitmap[width*iy+ix] = MAKERGB(data[0],data[1],data[2]);
+            }else{
+              is_tran = TRUE;
             }
             
-            // mrc_printf("Pixel @ X and Y (%d, %d): %3d %3d %3d %3d\n",
+            // mrc_printf("Pixel @ X and Y (%d, %d): %03d %03d %03d %03d\n",
             //     ix+1, iy+1,
             //     data[0],
             //     data[1],
@@ -81,6 +84,9 @@ uint8 *data = NULL;
             // );
             data+=4;
         }
+    }
+    if(is_tran){
+      bmp->mode = BM_TRANSPARENT;
     }
     // print_png(rgbaData, width, height);
     

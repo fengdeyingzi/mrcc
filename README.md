@@ -28,3 +28,10 @@ mrp版本实现了部分手机C的函数，具体可以看mythroad/c目录下的
 
 
 
+## 相关资料收集
+pngj java的png编码库
+https://github.com/leonbloy/pngj
+png解码 
+https://github.com/elanthis/upng
+https://github.com/jcorks/tPNG
+

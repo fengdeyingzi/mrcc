@@ -46,7 +46,9 @@ extern "C" {
 // Frees bytes.
 #define TPNG_FREE   mrc_free 
 
+#define MINIZ_USE_UNALIGNED_LOADS_AND_STORES 1
 #define abs(num) ((num>0)?num:-num)
+typedef unsigned int size_t;
 
 void* mrc_realloc(void *data, uint32 len){
     void *buf = NULL;
@@ -84,24 +86,6 @@ void *TPNG_CALLOC(int num,uint32 size){
 ///////////////// 
 ///////////////// All includes.
 #include "tpng.h"
-
-// Needed for tPNG
-// #include <string.h>
-// #include <stdlib.h>
-//
-
-
-// Needed for TINFL
-// #include <stddef.h>
-//#include <stdint.h>
-//#include <stdlib.h>
-//#include <string.h>
-//
-
-
-/////////////////
-/////////////////
-
 
 
 
@@ -792,7 +776,7 @@ static int tpng_get_bytes_per_row(tpng_image_t * image, int width) {
 
 // bytes within the 8x8 adam7 grid
 // that each pass makes
-#if 1
+
 const uint8 TPNG_ADAM7__PASS_1_BYTES[1] = {0};
 const uint8 TPNG_ADAM7__PASS_2_BYTES[1] = {4};
 const uint8 TPNG_ADAM7__PASS_3_BYTES[2] = {32, 36}; // Pass3
@@ -832,7 +816,6 @@ static uint8 * TPNG_ADAM7__PASS_BYTES[7];/* = {
 };
 */
 
-
 // width, height of each pass subimage
 const uint8 TPNG_ADAM7__PASS_DIMS[7][2] = {
     {1, 1}, // pass 1
@@ -844,58 +827,10 @@ const uint8 TPNG_ADAM7__PASS_DIMS[7][2] = {
     {8, 4}, // pass 7
 };
 
-#else
-static uint8 TPNG_ADAM7__PASS_1_BYTES[1];
-static uint8 TPNG_ADAM7__PASS_2_BYTES[1];
-static uint8 TPNG_ADAM7__PASS_3_BYTES[2]; // Pass3
-static uint8 TPNG_ADAM7__PASS_4_BYTES[4];
-    
-static uint8 TPNG_ADAM7__PASS_5_BYTES[8];
-
-
-static uint8 TPNG_ADAM7__PASS_6_BYTES[16];
-
-static uint8 TPNG_ADAM7__PASS_7_BYTES[32];
-
-static uint8 * TPNG_ADAM7__PASS_BYTES[7];
-
-
-
-// width, height of each pass subimage
-static uint8 TPNG_ADAM7__PASS_DIMS[7][2];
-#endif
-
 void tpng_init(void) {
-     int i = 0;
-     static int tpng_isinit = 0;
-    
-	//  uint8 TPNG_ADAM7__PASS_1_BYTES[1] = {0};
-    //  uint8 TPNG_ADAM7__PASS_2_BYTES[1] = {4};
-    //  uint8 TPNG_ADAM7__PASS_3_BYTES[2] = {32, 36}; // Pass3
-	//  uint8 TPNG_ADAM7__PASS_4_BYTES_temp[4] = {
-	// 	2, 6,
-	// 	34, 38};
-
-	//  uint8 TPNG_ADAM7__PASS_5_BYTES_temp[8] = {
-	// 	16, 18, 20, 22,
-	// 	48, 50, 52, 54};
-
-	//  uint8 TPNG_ADAM7__PASS_6_BYTES_temp[16] = {
-	// 	1, 3, 5, 7,
-	// 	17, 19, 21, 23,
-	// 	33, 35, 37, 39,
-	// 	49, 51, 53, 55};
-
-	// uint8 TPNG_ADAM7__PASS_7_BYTES_temp[32] = {
-	// 	8, 9, 10, 11, 12, 13, 14, 15,
-	// 	24, 25, 26, 27, 28, 29, 30, 31,
-	// 	40, 41, 42, 43, 44, 45, 46, 47,
-	// 	56, 57, 58, 59, 60, 61, 62, 63};
+     int i = 0;static int tpng_isinit = 0;
     for(i=0;i<7;i++){
-        if(!tpng_isinit){
-            mrc_printf("tpng_init .. %d",i);
-            TPNG_ADAM7__PASS_BYTES[i] = mrc_malloc(32);
-        }
+        if(!tpng_isinit){ mrc_printf("tpng_init .. %d",i);TPNG_ADAM7__PASS_BYTES[i] = mrc_malloc(32);}
     }
     mrc_printf("tpng_init memcpy");
     mrc_memcpy(TPNG_ADAM7__PASS_BYTES[0], TPNG_ADAM7__PASS_1_BYTES,32);
@@ -905,35 +840,7 @@ void tpng_init(void) {
     mrc_memcpy(TPNG_ADAM7__PASS_BYTES[4], TPNG_ADAM7__PASS_5_BYTES,32);
     mrc_memcpy(TPNG_ADAM7__PASS_BYTES[5], TPNG_ADAM7__PASS_6_BYTES,32);
     mrc_memcpy(TPNG_ADAM7__PASS_BYTES[6], TPNG_ADAM7__PASS_7_BYTES,32);
-
     tpng_isinit = 1;
-
-	// static uint8 *TPNG_ADAM7__PASS_BYTES_temp[7] = {
-	// 	(uint8 *)TPNG_ADAM7__PASS_1_BYTES,
-	// 	(uint8 *)TPNG_ADAM7__PASS_2_BYTES,
-	// 	(uint8 *)TPNG_ADAM7__PASS_3_BYTES,
-	// 	 (uint8 *)TPNG_ADAM7__PASS_4_BYTES_temp,
-	// 	(uint8 *)TPNG_ADAM7__PASS_5_BYTES_temp,
-	// 	 (uint8 *)TPNG_ADAM7__PASS_6_BYTES_temp,
-	// 	(uint8 *)TPNG_ADAM7__PASS_7_BYTES_temp};
-
-	// // width, height of each pass subimage
-	// static uint8 TPNG_ADAM7__PASS_DIMS_temp[7][2] = {
-	// 	{1, 1},	 // pass 1
-	// 	{1, 1},	 // pass 2,
-	// 	{2, 1},	 // pass 3,
-	// 	{2, 2},	 // pass 4,
-	// 	{4, 2},	 // pass 5,
-	// 	{4, 4},	 // pass 6,
-	// 	{8, 4},	 // pass 7
-	// };
-
-	// mrc_memcpy(TPNG_ADAM7__PASS_4_BYTES, TPNG_ADAM7__PASS_4_BYTES_temp, sizeof(TPNG_ADAM7__PASS_4_BYTES_temp));
-	// mrc_memcpy(TPNG_ADAM7__PASS_5_BYTES, TPNG_ADAM7__PASS_5_BYTES_temp, sizeof(TPNG_ADAM7__PASS_5_BYTES_temp));
-	// mrc_memcpy(TPNG_ADAM7__PASS_6_BYTES, TPNG_ADAM7__PASS_6_BYTES_temp, sizeof(TPNG_ADAM7__PASS_6_BYTES_temp));
-	// mrc_memcpy(TPNG_ADAM7__PASS_7_BYTES, TPNG_ADAM7__PASS_7_BYTES_temp, sizeof(TPNG_ADAM7__PASS_7_BYTES_temp));
-	// mrc_memcpy(TPNG_ADAM7__PASS_BYTES, TPNG_ADAM7__PASS_BYTES_temp, sizeof(TPNG_ADAM7__PASS_BYTES_temp));
-	// mrc_memcpy(TPNG_ADAM7__PASS_DIMS, TPNG_ADAM7__PASS_DIMS_temp, sizeof(TPNG_ADAM7__PASS_DIMS_temp));
 }
 
 // given a pixel in a pass subimage, returns the index
@@ -958,7 +865,6 @@ static int tpng_adam7_subpixel_to_pixel(
     // byte reference within the adam7 box
     int adamByte = passRow[x8];
 
-
     // offset from row start in full image rgba
     int x = adamByte%8   + 8*(subx/TPNG_ADAM7__PASS_DIMS[pass][0]);
     int y = (adamByte/8) + 8*(suby/TPNG_ADAM7__PASS_DIMS[pass][1]);
@@ -981,7 +887,6 @@ static void tpng_adam7_pass_row_to_image(
         // should be fine; theyre aligned to 32bit boundaries.
         (*(uint32*)(image->rgba+(pixel*4))) = (*(uint32*)(passRgbaRow+(i*4))); 
     }
-    
 }
 
 // gets how many pixels fit from an adam7 pass width-wise
@@ -1018,9 +923,6 @@ static int tpng_adam7_get_pass_height(tpng_image_t * image, int pass) {
     return height;
 }
 
-
-
-
 static void tpng_adam7_decode(
     tpng_image_t * image, 
     tpng_iter_t * iter,
@@ -1039,8 +941,6 @@ static void tpng_adam7_decode(
     // the raw value within 
     uint8 * rowExpanded = TPNG_CALLOC(4, image->w);
 
-
-
     // each pass is an independent subimage that correspond 
     // to pixels within the final image, separated in 8x8 
     // chunks.
@@ -1051,9 +951,6 @@ static void tpng_adam7_decode(
     int passHeight;
     int passRowBytes;
     int row;
-
-    
-
 
     for(pass = 0; pass < 7; ++pass) {
         mrc_memset(prevRow, 0, rowBytes);
@@ -1071,15 +968,10 @@ static void tpng_adam7_decode(
             // abort read of IDAT
             if (!readN) break;
             mrc_memcpy(thisRow, readN, passRowBytes);
-    
-      
             // remove the filter from the bytes in the row 
             tpng_unfilter_row(image, thisRow, prevRow, passRowBytes, Bpp, filter);
-
             // finally: get scanlines from data
             tpng_expand_row(image, thisRow, rowExpanded, passWidth);
-
-
             tpng_adam7_pass_row_to_image(
                 rowExpanded,
                 image,
@@ -1087,27 +979,20 @@ static void tpng_adam7_decode(
                 passWidth,
                 pass
             );
-            
-            
             // save raw previous scanline            
             mrc_memcpy(prevRow, thisRow, rowBytes);
         }
     }
-
-    
     TPNG_FREE(prevRow);
     TPNG_FREE(thisRow);
     TPNG_FREE(rowExpanded);
-    
 }
-
-
 
 // zlib decompression, from TINFL
 static void *tinfl_decompress_mem_to_heap(
     const void *pSrc_buf, 
-    int32 src_buf_len, 
-    int32 *pOut_len, 
+    size_t src_buf_len, 
+    size_t *pOut_len, 
     int flags
 );
 
@@ -1115,7 +1000,7 @@ static void tpng_process_chunk(tpng_image_t * image, tpng_chunk_t * chunk) {
     // mrc_printf("tpng_process_chunk %s\n", chunk->type);
     tpng_iter_t *TPNGITER= NULL;
     tpng_iter_t * iter;
-    int32 rawUncompLen;
+    size_t rawUncompLen;
     void *rawUncomp;
     int Bpp;
     uint32 row,rowBytes;
@@ -1491,7 +1376,7 @@ typedef enum {
 
 /* Main low-level decompressor coroutine function. This is the only function actually needed for decompression. All the other functions are just high-level helpers for improved usability. */
 /* This is a universal API, i.e. it can be used as a building block to build any desired higher level decompression API. In the limit case, it can be called once per every byte input or output. */
-static tinfl_status tinfl_decompress(tinfl_decompressor *r, const uint8 *pIn_buf_next, int32 *pIn_buf_size, uint8 *pOut_buf_start, uint8 *pOut_buf_next, int32 *pOut_buf_size, const uint32 decomp_flags);
+static tinfl_status tinfl_decompress(tinfl_decompressor *r, const uint8 *pIn_buf_next, size_t *pIn_buf_size, uint8 *pOut_buf_start, uint8 *pOut_buf_next, size_t *pOut_buf_size, const uint32 decomp_flags);
 
 /* Internal/private bits follow. */
 enum
@@ -1510,10 +1395,10 @@ typedef struct
     int16 m_look_up[TINFL_FAST_LOOKUP_SIZE], m_tree[TINFL_MAX_HUFF_SYMBOLS_0 * 2];
 } tinfl_huff_table;
 
-#define TINFL_USE_64BIT_BITBUF 0
+#define TINFL_USE_64BIT_BITBUF 1
 
 #if TINFL_USE_64BIT_BITBUF
-typedef uint64_t tinfl_bit_buf_t;
+typedef uint64 tinfl_bit_buf_t;
 #define TINFL_BITBUF_SIZE (64)
 #else
 typedef uint32 tinfl_bit_buf_t;
@@ -1524,7 +1409,7 @@ struct tinfl_decompressor_tag
 {
     uint32 m_state, m_num_bits, m_zhdr0, m_zhdr1, m_z_adler32, m_final, m_type, m_check_adler32, m_dist, m_counter, m_num_extra, m_table_sizes[TINFL_MAX_HUFF_TABLES];
     tinfl_bit_buf_t m_bit_buf;
-    int32 m_dist_from_out_buf_start;
+    size_t m_dist_from_out_buf_start;
     tinfl_huff_table m_tables[TINFL_MAX_HUFF_TABLES];
     uint8 m_raw_header[4], m_len_codes[TINFL_MAX_HUFF_SYMBOLS_0 + TINFL_MAX_HUFF_SYMBOLS_1 + 137];
 };
@@ -1689,7 +1574,7 @@ struct tinfl_decompressor_tag
     }                                                                                                                               \
     while(0)
 
-tinfl_status tinfl_decompress(tinfl_decompressor *r, const uint8 *pIn_buf_next, int32 *pIn_buf_size, uint8 *pOut_buf_start, uint8 *pOut_buf_next, int32 *pOut_buf_size, const uint32 decomp_flags)
+tinfl_status tinfl_decompress(tinfl_decompressor *r, const uint8 *pIn_buf_next, size_t *pIn_buf_size, uint8 *pOut_buf_start, uint8 *pOut_buf_next, size_t *pOut_buf_size, const uint32 decomp_flags)
 {
     static const int s_length_base[31] = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258, 0, 0 };
     static const int s_length_extra[31] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0 };
@@ -1701,7 +1586,7 @@ tinfl_status tinfl_decompress(tinfl_decompressor *r, const uint8 *pIn_buf_next, 
     tinfl_status status = TINFL_STATUS_FAILED;
     uint32 num_bits, dist, counter, num_extra;
     tinfl_bit_buf_t bit_buf;
-    int32 n;
+    size_t n;
     
     uint8 *p;
     uint32 s;
@@ -1714,7 +1599,7 @@ tinfl_status tinfl_decompress(tinfl_decompressor *r, const uint8 *pIn_buf_next, 
     uint32 i, j, used_syms, total, sym_index, next_code[17], total_syms[16];
     const uint8 *pIn_buf_cur = pIn_buf_next, *const pIn_buf_end = pIn_buf_next + *pIn_buf_size;
     uint8 *pOut_buf_cur = pOut_buf_next, *const pOut_buf_end = pOut_buf_next + *pOut_buf_size;
-    int32 out_buf_size_mask = (decomp_flags & TINFL_FLAG_USING_NON_WRAPPING_OUTPUT_BUF) ? (int32)-1 : ((pOut_buf_next - pOut_buf_start) + *pOut_buf_size) - 1, dist_from_out_buf_start;
+    size_t out_buf_size_mask = (decomp_flags & TINFL_FLAG_USING_NON_WRAPPING_OUTPUT_BUF) ? (size_t)-1 : ((pOut_buf_next - pOut_buf_start) + *pOut_buf_size) - 1, dist_from_out_buf_start;
 // mrc_printf("tinfl_decompress 22222222222");
     /* Ensure the output buffer's size is a power of 2, unless the output buffer is large enough to hold the entire output file (in which case it doesn't matter). */
     if (((out_buf_size_mask + 1) & out_buf_size_mask) || (pOut_buf_next < pOut_buf_start))
@@ -1739,7 +1624,7 @@ tinfl_status tinfl_decompress(tinfl_decompressor *r, const uint8 *pIn_buf_next, 
         TINFL_GET_BYTE(2, r->m_zhdr1);
         counter = (((r->m_zhdr0 * 256 + r->m_zhdr1) % 31 != 0) || (r->m_zhdr1 & 32) || ((r->m_zhdr0 & 15) != 8));
         if (!(decomp_flags & TINFL_FLAG_USING_NON_WRAPPING_OUTPUT_BUF))
-            counter |= (((1U << (8U + (r->m_zhdr0 >> 4))) > 32768U) || ((out_buf_size_mask + 1) < (int32)(1U << (8U + (r->m_zhdr0 >> 4)))));
+            counter |= (((1U << (8U + (r->m_zhdr0 >> 4))) > 32768U) || ((out_buf_size_mask + 1) < (size_t)(1U << (8U + (r->m_zhdr0 >> 4)))));
         if (counter)
         {
             TINFL_CR_RETURN_FOREVER(36, TINFL_STATUS_FAILED);
@@ -1787,7 +1672,7 @@ tinfl_status tinfl_decompress(tinfl_decompressor *r, const uint8 *pIn_buf_next, 
                 {
                     TINFL_CR_RETURN(38, (decomp_flags & TINFL_FLAG_HAS_MORE_INPUT) ? TINFL_STATUS_NEEDS_MORE_INPUT : TINFL_STATUS_FAILED_CANNOT_MAKE_PROGRESS);
                 }
-                n = TINFL_MIN(TINFL_MIN((int32)(pOut_buf_end - pOut_buf_cur), (int32)(pIn_buf_end - pIn_buf_cur)), counter);
+                n = TINFL_MIN(TINFL_MIN((size_t)(pOut_buf_end - pOut_buf_cur), (size_t)(pIn_buf_end - pIn_buf_cur)), counter);
                 TINFL_MEMCPY(pOut_buf_cur, pIn_buf_cur, n);
                 pIn_buf_cur += n;
                 pOut_buf_cur += n;
@@ -2061,8 +1946,8 @@ tinfl_status tinfl_decompress(tinfl_decompressor *r, const uint8 *pIn_buf_next, 
 #ifdef MINIZ_UNALIGNED_USE_MEMCPY
 						mrc_memcpy(pOut_buf_cur, pSrc, sizeof(uint32)*2);
 #else
-                        ((uint32_t *)pOut_buf_cur)[0] = ((const uint32 *)pSrc)[0];
-                        ((uint32_t *)pOut_buf_cur)[1] = ((const uint32 *)pSrc)[1];
+                        ((uint32 *)pOut_buf_cur)[0] = ((const uint32 *)pSrc)[0];
+                        ((uint32 *)pOut_buf_cur)[1] = ((const uint32 *)pSrc)[1];
 #endif
                         pOut_buf_cur += 8;
                     } while ((pSrc += 8) < pSrc_end);
@@ -2153,9 +2038,9 @@ common_exit:
     if ((decomp_flags & (TINFL_FLAG_PARSE_ZLIB_HEADER | TINFL_FLAG_COMPUTE_ADLER32)) && (status >= 0))
     {
         const uint8 *ptr = pOut_buf_next;
-        int32 buf_len = *pOut_buf_size;
+        size_t buf_len = *pOut_buf_size;
         uint32 i, s1 = r->m_check_adler32 & 0xffff, s2 = r->m_check_adler32 >> 16;
-        int32 block_len = buf_len % 5552;
+        size_t block_len = buf_len % 5552;
         while (buf_len)
         {
             for (i = 0; i + 7 < block_len; i += 8, ptr += 8)
@@ -2192,14 +2077,14 @@ common_exit:
 /*  *pOut_len will be set to the decompressed data's size, which could be larger than src_buf_len on uncompressible data. */
 /*  The caller must call mz_TPNG_FREE() on the returned block when it's no longer needed. */
 
-void *tinfl_decompress_mem_to_heap(const void *pSrc_buf, int32 src_buf_len, int32 *pOut_len, int flags)
+void *tinfl_decompress_mem_to_heap(const void *pSrc_buf, size_t src_buf_len, size_t *pOut_len, int flags)
 {
     // mrc_printf("tinfl_decompress_mem_to_heap \n");
     tinfl_decompressor decomp;
     void *pBuf = NULL, *pNew_buf;
-    int32 src_buf_ofs = 0, out_buf_capacity = 0;
+    size_t src_buf_ofs = 0, out_buf_capacity = 0;
     
-    int32 src_buf_size,dst_buf_size,new_out_buf_capacity;
+    size_t src_buf_size,dst_buf_size,new_out_buf_capacity;
     tinfl_status status;
     tinfl_init(&decomp);
     *pOut_len = 0;
