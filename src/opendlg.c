@@ -9,7 +9,7 @@
 #include "smp_msgbox.h"
 #include "bmp.h"
 #include "smp_list.h"
-#include "string.h"
+#include "mr_string.h"
 #include "i18n.h"
 #include "smp_inputbox.h"
 // #include "smp_advbar.h"

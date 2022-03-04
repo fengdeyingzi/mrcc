@@ -15,7 +15,7 @@
 #include "smp_combobox.h"
 #include "smp_list.h"
 #include "topwnd.h"
-#include "string.h"
+#include "mr_string.h"
 #include "smp_titlebar.h"
 
 //×Ó´°¿ÚID

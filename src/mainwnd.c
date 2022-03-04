@@ -17,7 +17,7 @@
 #include "smp_combobox.h"
 #include "smp_list.h"
 #include "topwnd.h"
-#include "string.h"
+#include "mr_string.h"
 #include "smp_titlebar.h"
 #include "opendlg.h"
 #include "smp_inputbox.h"
@@ -89,8 +89,11 @@ enum
     MAINWND_DLG_OPEN //正常打开文件
 };
 static void CreateChain(PSTR data); /*创建链表*/
+static void CreateChain2(PSTR data); /*创建链表*/
 static void RefText(void);
-
+static int32 OpenFile(HWND hWnd,const char *filename);
+static int32 OpenOtherFile(const char *filename);
+static int32 load_program(PCSTR fname);
 
 typedef struct chain  /*定义链表结构体，此链表所有操作从1开始*/  
 {
@@ -105,9 +108,11 @@ static int chain_len;        //链表节点数(页数)
 static int current;    //当前位置(从1开始)
 static CHAIN *chain_head;    //头节点
 static char path[256];          //编辑器打开的文件路径
+static char path_coding[8];
 static UCHAR MAIN_TITLE[256];
 static UCHAR CONTENT_TITLE[32];
 static UCHAR CONTENT_TEXT[258];
+extern char *reload_package,*reload_name;
 
 char advFocus;
 /////////////////////////////////////////////////////////
@@ -134,6 +139,7 @@ static VOID ShowOptMenu(HWND hWnd)
     SMP_Menu_Popup(MAINWND_OPTMENU, SMP_MENUS_BOTTOMLEFT, hWnd, 0, _HEIGHT(hWnd) - SMP_ITEM_HEIGHT, NULL);
 }
 
+//设置标题 （GB编码）
 static void setMainTitle(char *title){
     PCWSTR temp_un = (PCWSTR)xl_ex_coding(title, mrc_strlen(title)+1,"GB2312", "UNICODE");
             mrc_memcpy(MAIN_TITLE, temp_un, mrc_wstrlen((char*)temp_un)+2);
@@ -141,13 +147,48 @@ static void setMainTitle(char *title){
             mrc_free((void*)temp_un);
 }
 
+// 打开文件 自动设置标题栏 自动设置编码 支持打开其它文件 刷新编辑器
+static int32 OpenFile(HWND hWnd,const char *filename){
+    char *temp_name = NULL;
+    char temp[128];
+    
+	if (load_program((PCSTR)filename)) {
+		if (OpenOtherFile(SMP_DIALOG_PATH) == MR_FAILED) {
+			SMP_MsgBox(0, hWnd, NULL,
+					   SGL_LoadString(STR_MSG), SGL_LoadString(STR_LOADERROR), ID_OK, NULL);
+		}else{
+            return 0;
+        }
+
+		
+	} else {
+		mrc_strcpy(path, SMP_DIALOG_PATH);
+		temp_name = file_getName(path);
+        mrc_sprintf(temp,"%s (%s)",temp_name,path_coding);
+		setMainTitle(temp);
+		RefText();
+		_SET_USERDATA(hWnd, 0);
+        return 0;
+	}
+    return -1;
+}
+
 // 打开其它文件
 static int32 OpenOtherFile(const char *filename){
     BITMAP_565 *bmp = NULL;
+    // char *temp_mrpname, *temp_filename;
+    
     char *endName = mrc_strrchr(filename, '.');
     if(endName!=NULL){
         if(mrc_strcmp(endName,".mrp") == 0){
-            mrc_runMrp((char*)filename, "start.mr", NULL);
+            // temp_mrpname = mrc_malloc(128);
+            // temp_filename = mrc_malloc(128);
+            // mrc_getReloadFile(&temp_mrpname, &temp_filename);
+            // mrc_printf("getReloadFile %s %s\n",temp_mrpname,temp_filename);
+            mrc_setReloadFile(mrc_getPackName(), (mrc_getVersion()<2000)?"start.mr":"cfunction.ext");
+            // mrc_free(temp_mrpname);
+            // mrc_free(temp_filename);
+            mrc_runMrp((char*)filename, (mrc_getVersion()<2000)?"start.mr":"cfunction.ext", NULL);
             return 0;
         } else if(mrc_strcmp(endName, ".png") == 0){
             bmp = readBitmap565((char *)filename);
@@ -179,7 +220,7 @@ static int32 load_program(PCSTR fname)
 	len = mrc_getLen(fname);
     if(len < 0) return -1;
 	if (len == 0) {
-		CreateChain(NULL);
+		CreateChain2(NULL);
 		RefText();
 	}
 	endName = mrc_strrchr(fname,'.');
@@ -200,7 +241,7 @@ static int32 load_program(PCSTR fname)
 			return -1;
 		}
 		mrc_close(handle);
-		CreateChain(p);
+		CreateChain2(p);
 		free(p);
 		return 0; 
         }else{
@@ -312,6 +353,55 @@ static void Insert(CHAIN *data, int wz)//插入一个链表项
 	chain_len++;
 }
 
+void CreateChain2(PSTR data) /*创建链表*/
+{
+    // UnicodeSt uniText;
+    CHAIN *dd;
+    int32 curwz;
+    int32 item_len;
+    char *temp_un = NULL;
+    char *temp_node_un = NULL;
+    int32 is_gbk = TRUE;
+    // char *endName = NULL;
+    is_gbk = isGB2312(data, mrc_strlen(data));
+    if(is_gbk){
+        mrc_strcpy(path_coding,"GB2312");
+    }else{
+        mrc_strcpy(path_coding,"UTF-8");
+    }
+    temp_un = xl_ex_coding(data, mrc_strlen(data), path_coding, "UNICODE");
+    temp_node_un = temp_un;
+    curwz = current = 1; //初始化页面为第一页
+    
+	dd = chain_head;
+	do {
+        item_len = TestUNStr((uint16*)temp_node_un,200); //返回的长度其实是un字符数，非字节数
+        if(item_len)
+        {
+            if(!dd)
+            {
+                dd=(CHAIN*)mrc_malloc(sizeof(CHAIN));
+                Insert(dd,curwz);
+            }
+            SGL_MEMSET(dd->txt,0,514);//在插入链表时会对NEXT进行赋值所以不必关心NEXT。
+            // CharToUnicode(code, &uniText.pText, &uniText.len);
+            
+            mrc_memcpy((PWSTR)dd->txt, (PCWSTR)temp_node_un,item_len*2);
+	        // mrc_freeOrigin(uniText.pText, uniText.len);
+	        dd = dd->next;
+            temp_node_un+=item_len*2;
+            curwz++;
+        }
+	} while(item_len);
+
+    
+    item_len = chain_len;//删除多余的链表,因为删除时chain_len的值会不断改变所以用aa来代替
+    while(item_len >= curwz)
+    {
+        DelNode(curwz);
+        item_len--;
+    }
+}
 
 void CreateChain(PSTR data) /*创建链表*/
 {
@@ -645,15 +735,15 @@ saveto:
         break;
     case STR_BUILDER: // 打包mrp
         if(!path[0]){ //请先打开文件
-            SMP_MsgBox(0,hWnd, NULL, SGL_LoadString(STR_MSG),(PCWSTR)"\x8b\xf7\x51\x48\x62\x53\x5f\x0\x65\x87\x4e\xf6\x0\x0",ID_OK, NULL );
+            SMP_MsgBox(0,hWnd, NULL, SGL_LoadString(STR_MSG),SGL_LoadString(STR_PLEASEOPEN),ID_OK, NULL );
         }
         else if(checkEndName(path, ".c")){
             mrc_drawText("开始打包",0,0,240, 0, 0,0,1);
             mrc_refreshScreen(0,0,SCREEN_WIDTH,24);
             packProject(path);
-            SMP_MsgBox(0,hWnd, NULL, SGL_LoadString(STR_MSG),(PCWSTR)"\x62\x53\x53\x5\x5b\x8c\x62\x10\xff\xc\x0\x6d\x0\x72\x0\x70\x57\x28\x5d\xe5\x7a\xb\x76\xee\x5f\x55\x4e\xb\x0\x0",ID_OK, NULL );
+            SMP_MsgBox(0,hWnd, NULL, SGL_LoadString(STR_MSG),SGL_LoadString(STR_BUILDOK),ID_OK, NULL );
         }else{ //你打开的不是C文件
-            SMP_MsgBox(0,hWnd, NULL, SGL_LoadString(STR_MSG),(PCWSTR)"\x4f\x60\x62\x53\x5f\x0\x76\x84\x4e\xd\x66\x2f\x0\x43\x65\x87\x4e\xf6\x0\x0",ID_OK, NULL );
+            SMP_MsgBox(0,hWnd, NULL, SGL_LoadString(STR_MSG),SGL_LoadString(STR_NOTCLANG),ID_OK, NULL );
         }
         // if(path)
         // SMP_MsgBox(0,hWnd, NULL,SGL_LoadString(STR_MSG),SGL_LoadString(STR_BUILDERERROR), ID_OK,NULL);
@@ -730,6 +820,7 @@ static void command(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
         {
         case ID_OK:
             _FUNCSET_STYLE(FUNC_EXIT);
+            mrc_setReloadFile(reload_package,reload_name);
             mrc_exit();
             return;
         }
@@ -806,21 +897,22 @@ static void ShowEvent(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
     {
         if(_USERDATA(hWnd) == DIALOG_GET)
         {
-            if(load_program(SMP_DIALOG_PATH))
-            {
-                if(OpenOtherFile(SMP_DIALOG_PATH) == MR_FAILED){
-                    SMP_MsgBox(0, hWnd, NULL, 
-                    SGL_LoadString(STR_MSG), SGL_LoadString(STR_LOADERROR), ID_OK, NULL); 
-                }
+            OpenFile(hWnd, SMP_DIALOG_PATH);
+            // if(load_program(SMP_DIALOG_PATH))
+            // {
+            //     if(OpenOtherFile(SMP_DIALOG_PATH) == MR_FAILED){
+            //         SMP_MsgBox(0, hWnd, NULL, 
+            //         SGL_LoadString(STR_MSG), SGL_LoadString(STR_LOADERROR), ID_OK, NULL); 
+            //     }
                 
-                return;
-            }else{
-                mrc_strcpy(path, SMP_DIALOG_PATH);
-                temp_name = file_getName(path);
-                setMainTitle(temp_name);
-                RefText();
-                _SET_USERDATA(hWnd,0);
-            }
+            //     return;
+            // }else{
+            //     mrc_strcpy(path, SMP_DIALOG_PATH);
+            //     temp_name = file_getName(path);
+            //     setMainTitle(temp_name);
+            //     RefText();
+            //     _SET_USERDATA(hWnd,0);
+            // }
             
         }
     }

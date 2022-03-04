@@ -20,6 +20,8 @@ int Asc2Uni(char *input, char *output, int32 outlen);
 int Uni2Asc(char *input, char *output,int outlen);
 char *utfToGb(char *text);
 char *gbToUtf(char *text);
+int32 isGBK(const char *buf, int size);
+int32 isGB2312(const char *buf, int size);
 
 
 #endif

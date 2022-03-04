@@ -1,6 +1,6 @@
 #include "smp.h"
 #include "smp_edit.h"
-#include "string.h"
+#include "mr_string.h"
 
 #define PWDCHAR			0x2a //'*'
 #define SMP_MAXCHARS_PERLINE		80 //×î´ó×Ö·ûÊý

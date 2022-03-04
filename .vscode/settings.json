@@ -12,6 +12,9 @@
         "vector": "c",
         "xstring": "c",
         "xutility": "c",
-        "smp_toolbar.h": "c"
+        "smp_toolbar.h": "c",
+        "string.h": "c",
+        "smp_titlebar.h": "c",
+        "smp_textinfo.h": "c"
     }
 }

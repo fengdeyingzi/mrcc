@@ -544,6 +544,23 @@ int32 MakePath(char *path)
     return 0;
 }
 
+int32 TestUNStr(uint16 *str, int32 len){
+    uint16 *t=str;
+    int32 i;
+    
+    if(!str) return 0;
+    for(i=0; *str && i<len; i++)
+    {
+        if(*str == 0x0d00)
+        {
+            str+=2;
+            i++;
+        }
+        else str++;
+    }
+    return str-t;
+}
+
 int32 TestStr(char *str, int32 len)
 {
     char *t=str;

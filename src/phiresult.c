@@ -1,7 +1,7 @@
 #include "phiresult.h"
 #include "mainwnd.h"
 #include "topwnd.h"
-#include "string.h"
+#include "mr_string.h"
 #include "littlec.h"
 #include "opendlg.h"
 #include "momo.h"

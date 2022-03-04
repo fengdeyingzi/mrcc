@@ -21,6 +21,7 @@
 #include "mainwnd.h"
 #include "mrc_android.h"
 #include "xl_debug.h"
+#include <mrc_base_i.h>
 
 #define PICINITSUC 0x01
 #define PLATRUMMODE 0x02
@@ -39,6 +40,7 @@ char *ProjectDir = NULL;
 //运行的文件绝对路径
 char *tempfile_path = NULL;
 char ASSETS_DIR[300];
+char *reload_package,*reload_name;
 
 void SafeExit(int32 data)
 {
@@ -178,6 +180,7 @@ void PicocRun(int32 data)
 
 int32 mrc_init(void)
 {
+    mrc_getReloadFile(&reload_package, &reload_name);
 	return momo_init();
 }
 

@@ -1,6 +1,6 @@
 #include "smp.h"
 #include "i18n.h"
-#include "string.h"
+#include "mr_string.h"
 #include "smp_inputbox.h"
 #include "smp_toolbar.h"
 #include "smp_edit.h"

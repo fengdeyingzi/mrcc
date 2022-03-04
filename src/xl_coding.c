@@ -71,57 +71,104 @@ int input_len= wstrlen(input);
  return output;
 }
 
-
 //判断utf编码，0为成功，-1失败
-int IsUTF8( void* pBuffer, long size)
-{
-int IsUTF8 = 0;
-unsigned char* start = (unsigned char*)pBuffer;
-unsigned char* end = (unsigned char*)pBuffer + size;
-while (start < end)
-{
-if (*start < 0x80) // (10000000): 值小于0x80的为ASCII字符
-{
-start++;
-}
-else if (*start < (0xC0)) // (11000000): 值介于0x80与0xC0之间的为无效UTF-8字符
-{
-IsUTF8 = -1;
-break;
-}
-else if (*start < (0xE0)) // (11100000): 此范围内为2字节UTF-8字符
-{
-if (start >= end - 1)
-break;
-if ((start[1] & (0xC0)) != 0x80)
-{
-IsUTF8 = -1;
-break;
-}
-start += 2;
-}
-else if (*start < (0xF0)) // (11110000): 此范围内为3字节UTF-8字符
-{
-if (start >= end - 2)
-break;
-if ((start[1] & (0xC0)) != 0x80 || (start[2] & (0xC0)) != 0x80)
-{
-IsUTF8 = -1;
-break;
-}
-start += 3;
-}
-else
-{
-IsUTF8 = -1;
-break;
-}
-}
-return IsUTF8;
+int IsUTF8(void *pBuffer, long size) {
+	int IsUTF8 = 0;
+	unsigned char *start = (unsigned char *)pBuffer;
+	unsigned char *end = (unsigned char *)pBuffer + size;
+	while (start < end) {
+		if (*start < 0x80)	// (10000000): 值小于0x80的为ASCII字符
+		{
+			start++;
+		} else if (*start < (0xC0))	 // (11000000): 值介于0x80与0xC0之间的为无效UTF-8字符
+		{
+			IsUTF8 = -1;
+			break;
+		} else if (*start < (0xE0))	 // (11100000): 此范围内为2字节UTF-8字符
+		{
+			if (start >= end - 1)
+				break;
+			if ((start[1] & (0xC0)) != 0x80) {
+				IsUTF8 = -1;
+				break;
+			}
+			start += 2;
+		} else if (*start < (0xF0))	 // (11110000): 此范围内为3字节UTF-8字符
+		{
+			if (start >= end - 2)
+				break;
+			if ((start[1] & (0xC0)) != 0x80 || (start[2] & (0xC0)) != 0x80) {
+				IsUTF8 = -1;
+				break;
+			}
+			start += 3;
+		} else {
+			IsUTF8 = -1;
+			break;
+		}
+	}
+	return IsUTF8;
 }
 
+int32 isGBK(const char *buf, int size){
+    int i = 0;
+    int32 ret = TRUE;
+    int32 line  = 1;
+     for ( ; i < size; i++)
+    {
+        if(buf[i]=='\n'){
+            line++;
+        }
+        if(!(0x80 & buf[i]))
+        {
+            ret = FALSE;
+            mrc_printf("GBK编码检测失败 pos:%d, line:%d\n", i,line);
+            break;
+        }
+    }
+    return ret;
+}
 
+int32 isGB2312(const char *buf, int size) {
+	int32 isGBK = TRUE;
+	int start = 0;
+	int end = size;
+	int c = 0;
+	int type = 0;
+    int32 line  = 1;
 
+	while (start < end) {
+		c = buf[start] & 0xff;
+		if (c == '\n') {
+			line++;
+		}
+		switch (type) {
+		case 0:
+			if (c >= 0xa1 && c <= 0xf7) {
+				type = 1;
+			} else if (c < 128) {
+			} else {
+                mrc_printf("GBK编码检测失败 pos:%d, line:%d\n", start,line);
+				isGBK = FALSE;
+				goto GBWHILE;
+			}
+			break;
+		case 1:
+			if (c >= 0xa1 && c <= (0xa0 + 94)) {
+				type = 0;
+			} else {
+				isGBK = FALSE;
+                mrc_printf("GBK编码检测失败 pos:%d, line:%d\n", start,line);
+				goto GBWHILE;
+			}
+		}
+
+		start++;
+	}
+
+GBWHILE:
+	return isGBK;
+}
 
 //复制unicode编码字符串，返回的字符串需要手动free
 char *un_copy(char *text)

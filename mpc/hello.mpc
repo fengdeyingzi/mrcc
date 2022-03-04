@@ -2,6 +2,7 @@
 #include <base.h>
 #include <graphics.h>
 #include <android.h>
+#include <android.h>
 
 /*
 Í·ÎÄ¼þ£ºgraphics.h
@@ -52,7 +53,10 @@ int event(int type, int p1, int p2) {
 			bitmapFree(bitmap);
 			ref(0,0,SCRW,SCRH);
 			break;
+		case 2:
+		    toast("²âÊÔ",0);
 		}
+		
 	} else if (MS_UP == type) {
         exit();
 	}

@@ -1,5 +1,5 @@
 #include "smp_label.h"
-#include "string.h"
+#include "mr_string.h"
 #include "smp.h"
 #include "bmp.h"
 

@@ -233,6 +233,8 @@ int32 strH(char* str, int is_uincode, uint16 font);
 */
 char* GetFileExt(const char* path);
 
+//测试一定长度的UNICODE字符串是否安全，返回安全的长度
+int32 TestUNStr(uint16 *str, int32 len);
 
 //测试一定长度的GB字符串是否安全，返回安全的长度
 int32 TestStr(char *str, int32 len);

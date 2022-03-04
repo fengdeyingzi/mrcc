@@ -9,5 +9,5 @@ interpreter\syslib\m_ex_game.c interpreter\syslib\m_ex_math.c interpreter\syslib
 interpreter\syslib\math.c src\xl_coding.c src\tPNG\tpng.c ^
  mpc\hello.mpc(name=mpc.c) mpc\ic_launcher.bmp.png(name=ic_launcher.bmp) mpc\assets\1.png ^
 -o run.mrp -gzip ^
--filename picoc.mrp -displayname 手机CAPP运行器v1.7 -vendor "风的影子" -desc "手机CAPP运行器，读取mpc.c文件进行运行" -appid 202003 -version 3007
+-filename picoc.mrp -displayname 手机CAPP运行器v1.8 -vendor "风的影子" -desc "手机CAPP运行器，读取mpc.c文件进行运行" -appid 202003 -version 3008
 mrpbuilder -t info -i run.mrp

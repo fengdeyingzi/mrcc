@@ -1,6 +1,6 @@
 #include "mrc_image.h"
 #include "mrc_sound.h"
-#include "string.h"
+#include "mr_string.h"
 
 char lc_state;
 int32 timer[2]; //两个定时器句柄,初始化时创建,运行结束后要停止他

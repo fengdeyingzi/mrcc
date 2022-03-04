@@ -1,5 +1,5 @@
 #include "smp_titlebar.h"
-#include "string.h"
+#include "mr_string.h"
 #include "smp.h"
 #include "bmp.h"
 #include "momo.h"

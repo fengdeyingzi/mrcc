@@ -22,6 +22,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/sfw/common/**",
                 "C:\\SKYsdk\\include\\**"
             ],
             "defines": [

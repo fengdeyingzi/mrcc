@@ -1,5 +1,5 @@
 #include "smp_spin.h"
-#include "string.h"
+#include "mr_string.h"
 #include "bmp.h"
 
 //left&right bitmap width
