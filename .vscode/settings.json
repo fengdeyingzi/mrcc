@@ -15,6 +15,13 @@
         "smp_toolbar.h": "c",
         "string.h": "c",
         "smp_titlebar.h": "c",
-        "smp_textinfo.h": "c"
+        "smp_textinfo.h": "c",
+        "mrc_network.h": "c",
+        "httpclient.h": "c",
+        "algorithm": "c",
+        "chrono": "c",
+        "iterator": "c",
+        "xhash": "c",
+        "xtree": "c"
     }
 }

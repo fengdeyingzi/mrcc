@@ -23,6 +23,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/sfw/common/**",
+                "${workspaceFolder}/src/http/**",
                 "C:\\SKYsdk\\include\\**"
             ],
             "defines": [

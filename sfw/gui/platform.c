@@ -22,6 +22,7 @@
 #include "mrc_android.h"
 #include "xl_debug.h"
 #include <mrc_base_i.h>
+#include "httpclient.h"
 
 #define PICINITSUC 0x01
 #define PLATRUMMODE 0x02
@@ -178,10 +179,24 @@ void PicocRun(int32 data)
     }
 }
 
+ void ws_onOpen(int32 ws){
+     mrc_printf("onOpen");
+ }
+ void ws_onMessage(int32 ws, char *msg){
+     mrc_printf("onMessage ");
+ }
+ void ws_onClose(int32 ws){
+     mrc_printf("onClose");
+ }
+ void ws_onError(int32 ws, int err){
+     mrc_printf("onError");
+ }
+
 int32 mrc_init(void)
 {
     mrc_getReloadFile(&reload_package, &reload_name);
-	return momo_init();
+    http_ws("http://websocket.yzjlb.net:2022", ws_onOpen, ws_onMessage, ws_onClose, ws_onError);
+	return 0; //momo_init();
 }
 
 int32 mrc_event(int32 code, int32 param0, int32 param1)
